@@ -33,9 +33,31 @@ export function navTargetHref(target: NavTarget): string {
   return target === 'top' ? '#' : `#${target}`
 }
 
-export function scrollToNavTarget(target: NavTarget) {
+function isSiteSectionId(value: string): value is SiteSectionId {
+  return (Object.values(SITE_SECTIONS) as string[]).includes(value)
+}
+
+export function hashToNavTarget(hash: string): NavTarget {
+  const id = hash.replace(/^#/, '')
+  if (!id) return 'top'
+  return isSiteSectionId(id) ? id : 'top'
+}
+
+function pathWithoutHash() {
+  return `${window.location.pathname}${window.location.search}`
+}
+
+export function scrollToNavTarget(
+  target: NavTarget,
+  options?: { updateHistory?: boolean },
+) {
+  const updateHistory = options?.updateHistory ?? true
+
   if (target === 'top') {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    if (updateHistory) {
+      history.pushState(null, '', pathWithoutHash())
+    }
     return
   }
 
@@ -47,4 +69,8 @@ export function scrollToNavTarget(target: NavTarget) {
     element.getBoundingClientRect().top + window.scrollY - offset
 
   window.scrollTo({ top, behavior: 'smooth' })
+
+  if (updateHistory) {
+    history.pushState(null, '', `#${target}`)
+  }
 }

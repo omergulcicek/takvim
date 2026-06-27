@@ -16,10 +16,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import { FaqSection } from '@/components/faq-section'
 import { HowToSubscribeSection } from '@/components/how-to-subscribe-section'
 import { SubscriptionPanel } from '@/components/subscription-panel'
-import { SECTION_SCROLL_CLASS, SITE_DESCRIPTION, SITE_SUBDESCRIPTION, SITE_SECTIONS } from '@/lib/site-nav'
+import { SECTION_SCROLL_CLASS, SITE_DESCRIPTION, SITE_SUBDESCRIPTION, SITE_SECTIONS, scrollToNavTarget } from '@/lib/site-nav'
 import { getCategoryColor } from '@/lib/categories'
 import { categoriesQueryOptions } from '@/lib/queries/categories'
 import { eventsQueryOptions } from '@/lib/queries/events'
@@ -123,6 +124,14 @@ function App() {
           <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-muted-foreground">
             {SITE_SUBDESCRIPTION}
           </p>
+          <div className="mt-8 flex justify-center">
+            <Button
+              size="lg"
+              onClick={() => scrollToNavTarget(SITE_SECTIONS.abonelik)}
+            >
+              Abone Ol
+            </Button>
+          </div>
         </div>
 
         <div>
