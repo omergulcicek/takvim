@@ -1,0 +1,86 @@
+{
+  "calendarName": "🌙 Manevi günler",
+  "calendarDesc": "Müslümanlar için önemli günler (Diyanet esas alınarak; hilal gözlemi nedeniyle ±1 gün değişebilir, kandil ve hicrî günler akşamdan başlar)",
+  "slug": "spiritual",
+  "events": [
+
+    { 
+      "id": "2025-regaip", 
+      "summary": "Regaip Kandili", 
+      "description": "Üç ayların ilk kandili (Receb ayı). 24 Aralık 2025 akşamı başlayıp 25 Aralık günü devam eder. Allah’ın rahmet ve mağfiretinin bol olduğu bu gecede namaz, dua, Kur’an tilaveti ve tövbelerle ihya edilmesi tavsiye edilir.", 
+      "month": 12, "day": 25, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    },
+    { 
+      "id": "2025-mirac", 
+      "summary": "Miraç Kandili", 
+      "description": "Peygamber Efendimizin (s.a.v.) Mirac'a yükselişi. 25 Ocak 2025 akşamı başlayıp 26 Ocak günü devam eder. Bu mübarek gecede Peygamberimize namaz farz kılınmış, Bakara Suresi’nin son ayetleri verilmiş ve ümmete Allah’ın rahmeti müjdelenmiştir. İbadetle geçirilmesi büyük önem taşır.", 
+      "month": 1, "day": 26, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    },
+    { 
+      "id": "2025-berat", 
+      "summary": "Berat Kandili", 
+      "description": "Şaban'ın on beşinci gecesi. 12 Şubat 2025 akşamı başlayıp 13 Şubat günü devam eder. Günahların affı, kulların bağışlanması ve duaların kabulü için önemli bir gece kabul edilir. Namaz, Kur’an tilaveti ve bolca istiğfar ile geçirilmesi tavsiye edilir.", 
+      "month": 2, "day": 13, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    },
+    { 
+      "id": "2025-ramazan-baslangic", 
+      "summary": "Ramazan Başlangıcı", 
+      "description": "Ramazan ayının ilk günü. 1 Mart 2025’te başlar. Oruç, teravih namazı, Kur’an tilaveti ve sadaka ile dolu bir ayın başlangıcıdır.", 
+      "month": 3, "day": 1, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    },
+    { 
+      "id": "2025-kadir", 
+      "summary": "Kadir Gecesi", 
+      "description": "Ramazan'ın 27. gecesi olarak idrak edilir. 25 Mart 2025 akşamı başlayıp 26 Mart günü devam eder. Kur’an-ı Kerim’in indirildiği bu gece, bin aydan daha hayırlı kabul edilir. Namaz, Kur’an ve dualarla ihya edilmesi şiddetle tavsiye edilir.", 
+      "month": 3, "day": 26, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    },
+    { 
+      "id": "2025-ramazan-arefe", 
+      "summary": "Ramazan Bayramı Arefesi", 
+      "description": "Bayramdan önceki gün; ziyaret, dua ve hazırlıklarla geçirilir. Kabir ziyaretleri, sadaka ve ihtiyaç sahiplerini gözetme bu günde önemlidir.", 
+      "month": 3, "day": 29, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    },
+    { 
+      "id": "2025-ramazan-bayrami", 
+      "summary": "Ramazan Bayramı", 
+      "description": "30 Mart 2025’te başlar ve 3 gün sürer. Oruç ibadetinin ardından müminlerin sevinç günü. Bayram namazı, akraba ziyaretleri, küslerin barışması ve fakirlere yardım bu günlerin başlıca sünnetlerindendir.", 
+      "month": 3, "day": 30, "fromYear": 2025, "toYear": 2025, "durationDays": 3 
+    },
+    { 
+      "id": "2025-kurban-arefe", 
+      "summary": "Kurban Bayramı Arefesi", 
+      "description": "5 Haziran 2025. Bayramdan önceki gün; oruç tutmak, dua, sadaka ve hazırlıkla geçirilir. Hac için Arafat vakfesi bu gündedir.", 
+      "month": 6, "day": 5, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    },
+    { 
+      "id": "2025-kurban-bayrami", 
+      "summary": "Kurban Bayramı", 
+      "description": "6 Haziran 2025’te başlar ve 4 gün sürer. Hz. İbrahim’in teslimiyetini hatırlatan bu günde kurban kesilir, etler fakirlerle paylaşılır. Bayram namazı, akraba ziyaretleri ve yardımlaşma öne çıkar.", 
+      "month": 6, "day": 6, "fromYear": 2025, "toYear": 2025, "durationDays": 4 
+    },
+    { 
+      "id": "2025-hicri-yilbasi", 
+      "summary": "Hicri Yılbaşı (1 Muharrem 1446)", 
+      "description": "26 Haziran 2025 akşamı başlayıp 27 Haziran günü devam eder. Hicrî yılın ilk günü. Hz. Peygamber’in Mekke’den Medine’ye hicreti hatırlanır. Dua ve şükürle ihya edilmesi tavsiye edilir.", 
+      "month": 6, "day": 26, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    },
+    { 
+      "id": "2025-asure", 
+      "summary": "Aşure Günü (10 Muharrem 1446)", 
+      "description": "4 Temmuz 2025 akşamı başlayıp 5 Temmuz günü devam eder. Hz. Musa’nın Firavun’dan kurtuluşu, Hz. Nuh’un gemisinin karaya oturması gibi pek çok mübarek hadise bu günde anılır. Geleneksel olarak aşure yapılıp komşulara ve ihtiyaç sahiplerine dağıtılır. İbadet, oruç ve dua ile geçirilmesi teşvik edilir.", 
+      "month": 7, "day": 5, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    },
+    { 
+      "id": "2025-mevlid", 
+      "summary": "Mevlid Kandili", 
+      "description": "2 Kasım 2025 akşamı başlayıp 3 Kasım günü devam eder. Peygamber Efendimiz’in (s.a.v.) doğumunu anma gecesi. Onun ahlâkı ve sünneti hatırlanır, salavatlar getirilir, sohbet ve ibadetle ihya edilir.", 
+      "month": 9, "day": 3, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    },
+    { 
+      "id": "2025-uc-aylar-baslangici", 
+      "summary": "Üç Ayların Başlangıcı", 
+      "description": "31 Aralık 2024 akşamı başlayıp 1 Ocak 2025 günü devam eder. Receb ayının ilk günü; manevi iklimin kapısı olan üç ayların başlangıcıdır. İbadet ve tövbeye yöneliş için bir fırsat kabul edilir.", 
+      "month": 1, "day": 1, "fromYear": 2025, "toYear": 2025, "durationDays": 1 
+    }
+  ]
+}

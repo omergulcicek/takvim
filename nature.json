@@ -1,0 +1,193 @@
+{
+  "calendarName": "🌿 Doğa ve Gökyüzü",
+  "calendarDesc": "Doğanın döngüleri, gökyüzü olayları ve mevsimsel ritüeller",
+  "slug": "nature",
+  "events": [
+    {
+      "id": "cemre-havaya",
+      "summary": "Cemre (Havaya)",
+      "description": "19-20 Şubat civarında ilk cemre havaya düşer. Soğuklar yavaş yavaş çekilmeye başlar.",
+      "month": 2,
+      "day": 19,
+      "durationDays": 1
+    },
+    {
+      "id": "cemre-suya",
+      "summary": "Cemre (Suya)",
+      "description": "26-27 Şubat civarında ikinci cemre suya düşer. Akarsu ve göl kenarlarında buharlaşma ve hareketlilik artar.",
+      "month": 2,
+      "day": 26,
+      "durationDays": 1
+    },
+    {
+      "id": "cemre-topraga",
+      "summary": "Cemre (Toprağa)",
+      "description": "5-6 Mart civarında üçüncü cemre toprağa düşer. Tomurcuklar belirir, toprak ısınmaya başlar.",
+      "month": 3,
+      "day": 5,
+      "durationDays": 1
+    },
+
+    {
+      "id": "nevruz-bahar-equinox",
+      "summary": "Nevruz (Bahar Ekinoksu)",
+      "description": "21 Mart civarında gece ve gündüz eşitlenir; baharın gelişi kutlanır.",
+      "month": 3,
+      "day": 21,
+      "durationDays": 1
+    },
+    {
+      "id": "hidirellez-bahar-bulusmasi",
+      "summary": "Hıdırellez",
+      "description": "Ruz-ı Hızır (Hızır Günü) olarak adlandırılan Hıdırellez Günü, dünyada darda kalanların yardımcısı olduğu düşünülen Hızır ile denizlerin hâkimi olduğuna inanılan İlyas'ın yeryüzünde buluştukları gün olarak düşünülür ve kutlanır.",
+      "month": 5,
+      "day": 5,
+      "durationDays": 1
+    },
+
+    {
+      "id": "istanbul-lale-mevsimi",
+      "summary": "İstanbul Lale Mevsimi",
+      "description": "Laleler İstanbul’un parklarını Nisan başından itibaren renklendirir. Emirgan Korusu, Göztepe 60. Yıl Parkı ve Gülhane Parkı en popüler rotalardır.",
+      "month": 4,
+      "day": 1,
+      "location": "İstanbul",
+      "durationDays": 1
+    },
+
+    {
+      "id": "perseid-meteor-yagmurunun-zirvesi",
+      "summary": "Perseid Göktaşı Yağmuru (Zirve)",
+      "description": "Her yıl Ağustos ortasında Perseid yağmuru zirve yapar. Şehir ışıklarından uzak, karanlık bir bölgede (ör. yayla, kıyı) battaniye ile gökyüzünü izleyin. Işık kirliliğinden kaçın, telefon ekranını minimumda tutun.",
+      "month": 8,
+      "day": 12,
+      "durationDays": 1
+    },
+    {
+      "id": "geminid-meteor-yagmurunun-zirvesi",
+      "summary": "Geminid Göktaşı Yağmuru (Zirve)",
+      "description": "Aralık ortası Geminid’ler en parlak yağmurlardandır. Karanlık, açık bir ufuk bulun; gece soğuğuna karşı termal kıyafetler giyin. Kırmızı ışıklı bir el feneri gece görüşünü korumaya yardımcı olur.",
+      "month": 12,
+      "day": 14,
+      "durationDays": 1
+    },
+
+    {
+      "id": "istanbul-sakura-baltalimani",
+      "summary": "Sakura (Japon Kirazı) Çiçeği",
+      "description": "Sakuralar İstanbul’da genelde Mart sonu–Nisan başı açar. Baltalimanı Japon Bahçesi (Sarıyer) ziyaret edilebilir; çiçeklenme yılına ve havaya göre birkaç hafta oynayabilir.",
+      "month": 4,
+      "day": 1,
+      "location": "Baltalimanı Japon Bahçesi, Sarıyer – İstanbul",
+      "durationDays": 1
+    },
+
+    {
+      "id": "haziran-gundonumu-yaz",
+      "summary": "Yaz Gün Dönümü (En Uzun Gün)",
+      "description": "21 Haziran civarı yılın en uzun günü. Gün batımında ufukta renkler olağanüstü olur. Şehirde yüksekçe bir nokta ya da sahil yürüyüşü planlayabilirsiniz.",
+      "month": 6,
+      "day": 21,
+      "durationDays": 1
+    },
+    {
+      "id": "aralik-gundonumu-kis",
+      "summary": "Kış Gün Dönümü (En Uzun Gece)",
+      "description": "21 Aralık civarı yılın en uzun gecesi. Yıldız gözlemi için iyi bir fırsat. Sıcak içecek, eldiven ve şapka ile hazırlıklı olun.",
+      "month": 12,
+      "day": 21,
+      "durationDays": 1
+    },
+
+    {
+      "id": "mart-ilk-dolunay",
+      "summary": "İlkbahar Yakını İlk Dolunay",
+      "description": "İlkbahara yakın ilk dolunayda ay doğuşu etkileyici olur. Ufkun açık olduğu bir tepe/deniz kıyısında ayın yükselişini izleyin.",
+      "month": 3,
+      "day": 25,
+      "durationDays": 1
+    },
+    {
+      "id": "lunar-eclipse-total-2025-03-14",
+      "summary": "Tam Ay Tutulması",
+      "description": "Ay, Dünya'nın gölgesine tamamen girer. Karanlık ve açık bir ufuk seçin; çıplak gözle izlenebilir. Uzun poz fotoğraf için tripod önerilir.",
+      "month": 3,
+      "day": 14,
+      "fromYear": 2025,
+      "toYear": 2025,
+      "durationDays": 1
+    },
+    {
+      "id": "lunar-eclipse-total-2025-09-07",
+      "summary": "Tam Ay Tutulması",
+      "description": "Tam evrede Ay kızılımsı görünür (kanlı ay). Şehir ışıklarından uzaklaşın; rahat bir şezlong ve ince battaniye işinizi görür.",
+      "month": 9,
+      "day": 7,
+      "fromYear": 2025,
+      "toYear": 2025,
+      "durationDays": 1
+    },
+    {
+      "id": "solar-eclipse-total-2026-08-12",
+      "summary": "Tam Güneş Tutulması",
+      "description": "Güneş tamamen örtülür. Sadece tamlık evresi çıplak gözle güvenlidir; bunun dışındaki tüm evrelerde ISO sertifikalı gözlük kullanın.",
+      "month": 8,
+      "day": 12,
+      "fromYear": 2026,
+      "toYear": 2026,
+      "durationDays": 1
+    },
+    {
+      "id": "solar-eclipse-total-2027-08-02",
+      "summary": "Tam Güneş Tutulması",
+      "description": "Nadir ve etkileyici bir olay. Göz güvenliği kurallarına uyun; fotoğraf için güneş filtresi şarttır (ND/Güneş filtresi).",
+      "month": 8,
+      "day": 2,
+      "fromYear": 2027,
+      "toYear": 2027,
+      "durationDays": 1
+    },
+    {
+      "id": "solar-eclipse-total-2028-07-22",
+      "summary": "Tam Güneş Tutulması",
+      "description": "Bulutsuz ve açık ufuk bulun. Tutulma gözlüğü ve gölgeleme filtresi olmadan gözlem yapmayın.",
+      "month": 7,
+      "day": 22,
+      "fromYear": 2028,
+      "toYear": 2028,
+      "durationDays": 1
+    },
+    {
+      "id": "lunar-eclipse-total-2030-05-25",
+      "summary": "Tam Ay Tutulması",
+      "description": "Ay tamamen karanlık gölgeye girer. Şehirden uzak karanlık bir nokta seçerseniz Samanyolu'nu da görme şansınız artar.",
+      "month": 5,
+      "day": 25,
+      "fromYear": 2030,
+      "toYear": 2030,
+      "durationDays": 1
+    },
+    {
+      "id": "lunar-eclipse-total-2030-11-01",
+      "summary": "Tam Ay Tutulması",
+      "description": "Hava soğuk olabilir; termal kıyafet giyin. Kırmızı ışıklı el feneri gece görüşünüzü korur.",
+      "month": 11,
+      "day": 1,
+      "fromYear": 2030,
+      "toYear": 2030,
+      "durationDays": 1
+    },
+    {
+      "id": "solar-eclipse-partial-2030-11-14",
+      "summary": "Parçalı Güneş Tutulması",
+      "description": "Güneş'in bir kısmı örtülür. Her aşamada göz güvenliği için sertifikalı tutulma gözlüğü kullanın.",
+      "month": 11,
+      "day": 14,
+      "fromYear": 2030,
+      "toYear": 2030,
+      "durationDays": 1
+    }
+  ]
+}
+
+
