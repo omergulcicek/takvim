@@ -94,7 +94,9 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
         <p className={SECTION_DESC_CLASS}>
           Kategorileri seçin, abonelik URL’sini kopyalayın ve takvim uygulamanıza
           ekleyin. Abonelik, dosya indirmekten farklıdır — etkinlikler otomatik
-          güncellenir.
+          güncellenir. Farklı kategorilerin cihazınızda ayrı renk ve takvimler
+          halinde görünmesini istiyorsanız, her kategoriyi tek tek abone olup
+          takvim uygulamanızda özelleştirebilirsiniz.
         </p>
       </div>
 

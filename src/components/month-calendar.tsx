@@ -33,10 +33,13 @@ import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { groupCategoriesForSelect } from "@/lib/category-groups";
 import {
   Tooltip,
   TooltipContent,
@@ -265,6 +268,11 @@ export function MonthCalendar({
     [categoriesProp, events],
   );
 
+  const { groups: categoryGroups, ungrouped: ungroupedCategories } = useMemo(
+    () => groupCategoriesForSelect(categories),
+    [categories],
+  );
+
   const [selectedCategoryKey, setSelectedCategoryKey] = useState(
     ALL_CATEGORIES_KEY,
   );
@@ -409,6 +417,19 @@ export function MonthCalendar({
     </div>
   );
 
+  function renderCategoryItem(category: CalendarCategory) {
+    const color = getCategoryColor(category.slug);
+    return (
+      <SelectItem key={category.key} value={category.key}>
+        <span
+          className={cn("size-2 shrink-0 rounded-full", color.dot)}
+          aria-hidden
+        />
+        {category.name}
+      </SelectItem>
+    );
+  }
+
   const categorySelect = (
     <Select
       value={selectedCategoryKey}
@@ -427,18 +448,13 @@ export function MonthCalendar({
         className="w-[var(--radix-select-trigger-width)] md:w-56"
       >
         <SelectItem value={ALL_CATEGORIES_KEY}>Tüm Takvimler</SelectItem>
-        {categories.map((category) => {
-          const color = getCategoryColor(category.slug);
-          return (
-            <SelectItem key={category.key} value={category.key}>
-              <span
-                className={cn("size-2 shrink-0 rounded-full", color.dot)}
-                aria-hidden
-              />
-              {category.name}
-            </SelectItem>
-          );
-        })}
+        {categoryGroups.map((group) => (
+          <SelectGroup key={group.label}>
+            <SelectLabel>{group.label}</SelectLabel>
+            {group.categories.map(renderCategoryItem)}
+          </SelectGroup>
+        ))}
+        {ungroupedCategories.map(renderCategoryItem)}
       </SelectContent>
     </Select>
   );
