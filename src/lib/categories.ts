@@ -9,6 +9,7 @@ export type CategoryColorKey =
   | 'violet500'
   | 'rose600'
   | 'blue600'
+  | 'green600'
 
 export type CategoryColorStyle = {
   // Aylık görünümdeki event "chip"i (yumuşak renkli arka plan)
@@ -46,6 +47,10 @@ export const COLOR_STYLES: Record<
     chip: 'bg-blue-100 text-blue-900 dark:bg-blue-600/20 dark:text-blue-200',
     dot: 'bg-blue-600',
   },
+  green600: {
+    chip: 'bg-green-100 text-green-900 dark:bg-green-600/15 dark:text-green-300',
+    dot: 'bg-green-600',
+  },
   default: {
     chip: 'bg-muted text-foreground/80',
     dot: 'bg-muted-foreground',
@@ -60,6 +65,7 @@ export const CATEGORY_COLOR_MAP: Record<string, CategoryColorKey> = {
   'islam-alimleri': 'violet500',
   'savas-ve-fetihler': 'rose600',
   'turk-edebiyati': 'blue600',
+  futbol: 'green600',
 }
 
 export function getCategoryColor(
