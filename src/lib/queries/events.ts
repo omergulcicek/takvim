@@ -1,8 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
 import { createServerFn } from '@tanstack/react-start'
 
-import { getSupabaseServerClient } from '@/lib/supabase/server'
-
 import { queryKeys } from './keys'
 
 export type CategoryRef = {
@@ -53,20 +51,10 @@ export type EventRow = {
 }
 
 const fetchEvents = createServerFn({ method: 'GET' }).handler(async () => {
-  const supabase = getSupabaseServerClient()
-  const { data, error } = await supabase
-    .from('events')
-    .select(
-      'id, title, description, location, source_url, start_date, end_date, occurrence_date, is_all_day, recurrence, calendar_system, hijri_month, hijri_day, hijri_end_month, hijri_end_day, hijri_rule, gregorian_dates:event_gregorian_dates(gregorian_year, start_date, end_date, occurrence_date), category:categories(slug, name, desc), subject:subjects(name, description, source_url)',
-    )
-    .eq('status', 'published')
-    .order('start_date', { ascending: true })
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return (data ?? []) as EventRow[]
+  const { fetchPublishedEventRows } = await import(
+    '@/lib/queries/fetch-published-events.server'
+  )
+  return fetchPublishedEventRows()
 })
 
 export const eventsQueryOptions = queryOptions({

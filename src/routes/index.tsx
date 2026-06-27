@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { SubscriptionPanel } from '@/components/subscription-panel'
 import { getCategoryColor } from '@/lib/categories'
 import { categoriesQueryOptions } from '@/lib/queries/categories'
 import { eventsQueryOptions } from '@/lib/queries/events'
@@ -115,6 +116,8 @@ function App() {
           <div className="h-[640px] animate-pulse rounded-md bg-muted" />
         )}
       </section>
+
+      <SubscriptionPanel categories={categoryRows} />
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
