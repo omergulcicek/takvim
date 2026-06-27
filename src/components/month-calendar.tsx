@@ -52,7 +52,7 @@ import type { HijriDateFields } from "@/lib/hijri-date";
 const WEEK_STARTS_ON = 1 as const;
 
 // Sabit hücre yüksekliği (aylar arası geçişte satır boyutu değişmesin).
-const DAY_CELL_HEIGHT_CLASS = "h-32";
+const DAY_CELL_HEIGHT_CLASS = "h-24 sm:h-28 md:h-32";
 
 // Bir hücrede en fazla kaç event gösterilsin; fazlası "+N" popover'ına gider.
 // Taşma varsa bir slot "+N" düğmesi için ayrılır.
@@ -320,137 +320,160 @@ export function MonthCalendar({
   const prevLabel = view === "year" ? "Önceki yıl" : "Önceki ay";
   const nextLabel = view === "year" ? "Sonraki yıl" : "Sonraki ay";
 
+  const viewControls = (
+    <div className="inline-flex shrink-0 items-center rounded-md border border-input p-0.5">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant={view === "list" ? "default" : "ghost"}
+            size="icon"
+            className="size-7 rounded-sm"
+            aria-label="Liste görünümü"
+            onClick={() => setView("list")}
+          >
+            <Rows3 size={14} />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Liste görünümü</TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant={view === "month" ? "default" : "ghost"}
+            size="icon"
+            className="size-7 rounded-sm"
+            aria-label="Aylık görünüm"
+            onClick={() => setView("month")}
+          >
+            <Grid2x2 size={14} />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Aylık görünüm</TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant={view === "year" ? "default" : "ghost"}
+            size="icon"
+            className="size-7 rounded-sm"
+            aria-label="Yıllık görünüm"
+            onClick={() => setView("year")}
+          >
+            <Grid3x3 size={14} />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Yıllık görünüm</TooltipContent>
+      </Tooltip>
+    </div>
+  );
+
+  const navControls = (
+    <div className="inline-flex shrink-0 items-center rounded-md border border-input p-0.5">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-7 rounded-sm"
+            aria-label={prevLabel}
+            onClick={goPrev}
+          >
+            <ChevronLeft size={14} />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>{prevLabel}</TooltipContent>
+      </Tooltip>
+
+      <Button
+        variant="ghost"
+        className="h-7 rounded-sm px-2 text-xs sm:px-2.5"
+        onClick={() => setCurrentMonth(startOfMonth(new Date()))}
+      >
+        Bugün
+      </Button>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-7 rounded-sm"
+            aria-label={nextLabel}
+            onClick={goNext}
+          >
+            <ChevronRight size={14} />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>{nextLabel}</TooltipContent>
+      </Tooltip>
+    </div>
+  );
+
+  const categorySelect = (
+    <Select
+      value={selectedCategoryKey}
+      onValueChange={setSelectedCategoryKey}
+    >
+      <SelectTrigger
+        size="sm"
+        className="w-full min-w-0 max-w-56 md:w-56 [&_[data-slot=select-value]]:line-clamp-none"
+        aria-label="Kategori seç"
+      >
+        <SelectValue placeholder="Tüm Takvimler" />
+      </SelectTrigger>
+      <SelectContent
+        align="end"
+        position="popper"
+        className="w-[var(--radix-select-trigger-width)] md:w-56"
+      >
+        <SelectItem value={ALL_CATEGORIES_KEY}>Tüm Takvimler</SelectItem>
+        {categories.map((category) => {
+          const color = getCategoryColor(category.slug);
+          return (
+            <SelectItem key={category.key} value={category.key}>
+              <span
+                className={cn("size-2 shrink-0 rounded-full", color.dot)}
+                aria-hidden
+              />
+              {category.name}
+            </SelectItem>
+          );
+        })}
+      </SelectContent>
+    </Select>
+  );
+
   return (
-    <div className="flex w-full flex-col">
-      <div className="mb-2 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2.5">
-          <h2 className={cn(SECTION_HEADING_CLASS, "capitalize")}>
-            {view === "year"
-              ? format(currentMonth, "yyyy", { locale: tr })
-              : format(currentMonth, "LLLL yyyy", { locale: tr })}
-          </h2>
-        </div>
-
-        <TooltipProvider delayDuration={200}>
-          <div className="flex items-center gap-2">
-            <div className="inline-flex items-center rounded-md border border-input p-0.5">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={view === "list" ? "default" : "ghost"}
-                    size="icon"
-                    className="size-7 rounded-sm"
-                    aria-label="Liste görünümü"
-                    onClick={() => setView("list")}
-                  >
-                    <Rows3 size={14} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Liste görünümü</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={view === "month" ? "default" : "ghost"}
-                    size="icon"
-                    className="size-7 rounded-sm"
-                    aria-label="Aylık görünüm"
-                    onClick={() => setView("month")}
-                  >
-                    <Grid2x2 size={14} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Aylık görünüm</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={view === "year" ? "default" : "ghost"}
-                    size="icon"
-                    className="size-7 rounded-sm"
-                    aria-label="Yıllık görünüm"
-                    onClick={() => setView("year")}
-                  >
-                    <Grid3x3 size={14} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Yıllık görünüm</TooltipContent>
-              </Tooltip>
-            </div>
-
-            <Select
-              value={selectedCategoryKey}
-              onValueChange={setSelectedCategoryKey}
+    <div className="flex w-full min-w-0 flex-col">
+      <TooltipProvider delayDuration={200}>
+        <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4">
+          <div className="flex items-center justify-between gap-2 md:contents">
+            <h2
+              className={cn(
+                SECTION_HEADING_CLASS,
+                "min-w-0 truncate capitalize",
+              )}
             >
-              <SelectTrigger
-                size="sm"
-                className="w-56 [&_[data-slot=select-value]]:line-clamp-none"
-                aria-label="Kategori seç"
-              >
-                <SelectValue placeholder="Tüm Takvimler" />
-              </SelectTrigger>
-              <SelectContent align="end" position="popper" className="w-56">
-                <SelectItem value={ALL_CATEGORIES_KEY}>Tüm Takvimler</SelectItem>
-                {categories.map((category) => {
-                  const color = getCategoryColor(category.slug);
-                  return (
-                    <SelectItem key={category.key} value={category.key}>
-                      <span
-                        className={cn(
-                          "size-2 shrink-0 rounded-full",
-                          color.dot,
-                        )}
-                        aria-hidden
-                      />
-                      {category.name}
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-
-            <div className="inline-flex items-center rounded-md border border-input p-0.5">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-7 rounded-sm"
-                    aria-label={prevLabel}
-                    onClick={goPrev}
-                  >
-                    <ChevronLeft size={14} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{prevLabel}</TooltipContent>
-              </Tooltip>
-
-              <Button
-                variant="ghost"
-                className="h-7 rounded-sm px-2.5 text-xs"
-                onClick={() => setCurrentMonth(startOfMonth(new Date()))}
-              >
-                Bugün
-              </Button>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-7 rounded-sm"
-                    aria-label={nextLabel}
-                    onClick={goNext}
-                  >
-                    <ChevronRight size={14} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{nextLabel}</TooltipContent>
-              </Tooltip>
-            </div>
+              {view === "year"
+                ? format(currentMonth, "yyyy", { locale: tr })
+                : format(currentMonth, "LLLL yyyy", { locale: tr })}
+            </h2>
+            <div className="shrink-0 md:hidden">{navControls}</div>
           </div>
-        </TooltipProvider>
-      </div>
+
+          <div className="flex items-center gap-2 md:shrink-0">
+            {viewControls}
+            <div className="flex min-w-0 flex-1 justify-end md:flex-none">
+              {categorySelect}
+            </div>
+            <div className="hidden md:block">{navControls}</div>
+          </div>
+        </div>
+      </TooltipProvider>
+
+      <p className="mb-3 rounded-md border border-dashed bg-muted/40 px-3 py-2 text-center text-xs text-muted-foreground md:hidden">
+        Daha iyi bir deneyim için telefonunuzu yan çevirin.
+      </p>
 
       {view === "year" ? (
         <TooltipProvider delayDuration={200}>
@@ -483,9 +506,11 @@ export function MonthCalendar({
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-7 border-b text-center text-xs font-medium uppercase text-muted-foreground">
+          <div className="min-w-0 overflow-x-auto">
+            <div className="min-w-[280px]">
+          <div className="grid grid-cols-7 border-b text-center text-[10px] font-medium uppercase text-muted-foreground sm:text-xs">
             {weekdayLabels.map((label) => (
-              <div key={label} className="py-2">
+              <div key={label} className="py-1.5 sm:py-2">
                 {label}
               </div>
             ))}
@@ -506,15 +531,15 @@ export function MonthCalendar({
                 <div
                   key={day.toISOString()}
                   className={cn(
-                    "flex flex-col overflow-hidden border-b border-r p-1.5",
+                    "flex flex-col overflow-hidden border-b border-r p-0.5 sm:p-1.5",
                     DAY_CELL_HEIGHT_CLASS,
                     !inMonth && "bg-muted/30 text-muted-foreground",
                   )}
                 >
-                  <div className="mb-1 flex shrink-0 justify-end">
+                  <div className="mb-0.5 flex shrink-0 justify-end sm:mb-1">
                     <span
                       className={cn(
-                        "flex size-6 items-center justify-center rounded-full text-xs tabular-nums",
+                        "flex size-5 items-center justify-center rounded-full text-[10px] tabular-nums sm:size-6 sm:text-xs",
                         isToday(day) &&
                           "bg-primary font-semibold text-primary-foreground",
                       )}
@@ -543,6 +568,8 @@ export function MonthCalendar({
                 </div>
               );
             })}
+          </div>
+            </div>
           </div>
         </>
       )}

@@ -2,6 +2,7 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { Layout } from '../components/Layout'
+import { SITE_DESCRIPTION, SITE_SUBDESCRIPTION } from '../lib/site-nav'
 
 import appCss from '../styles.css?url'
 
@@ -22,8 +23,7 @@ export const Route = createRootRoute({
       },
       {
         name: 'description',
-        content:
-          'Dini günlerden İslam tarihine, milli bayramlardan Türk edebiyatına uzanan etkinlik takvimlerini keşfedin. Kategorileri seçip iPhone, Google Takvim veya Outlook takviminize abone olun.',
+        content: `${SITE_DESCRIPTION} ${SITE_SUBDESCRIPTION}`,
       },
     ],
     links: [

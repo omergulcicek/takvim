@@ -82,7 +82,7 @@ export function HowToSubscribeSection() {
       <p className={cn('mt-1', SECTION_DESC_CLASS)}>
         Kullandığınız uygulamayı seçin ve adımları izleyin.
       </p>
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-4 flex gap-2 sm:flex-wrap">
         {(Object.keys(DEVICE_GUIDES) as DeviceGuide[]).map((key) => {
           const Icon = DEVICE_ICONS[key]
           const selected = deviceGuide === key
@@ -94,13 +94,16 @@ export function HowToSubscribeSection() {
               size="sm"
               variant="outline"
               className={cn(
+                'h-auto min-w-0 flex-1 basis-0 flex-col gap-1 px-1 py-2.5 text-center whitespace-normal sm:h-8 sm:flex-none sm:basis-auto sm:flex-row sm:gap-2 sm:px-3 sm:py-0 sm:text-left',
                 selected &&
                   'border-primary bg-background font-medium shadow-sm ring-1 ring-ring',
               )}
               onClick={() => setDeviceGuide(key)}
             >
-              <Icon data-icon="inline-start" />
-              {DEVICE_GUIDES[key].label}
+              <Icon aria-hidden className="size-5 shrink-0 sm:size-4" />
+              <span className="text-[10px] leading-tight sm:text-xs">
+                {DEVICE_GUIDES[key].label}
+              </span>
             </Button>
           )
         })}

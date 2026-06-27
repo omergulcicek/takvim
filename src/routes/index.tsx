@@ -19,7 +19,7 @@ import {
 import { FaqSection } from '@/components/faq-section'
 import { HowToSubscribeSection } from '@/components/how-to-subscribe-section'
 import { SubscriptionPanel } from '@/components/subscription-panel'
-import { SECTION_SCROLL_CLASS, SITE_SECTIONS } from '@/lib/site-nav'
+import { SECTION_SCROLL_CLASS, SITE_DESCRIPTION, SITE_SUBDESCRIPTION, SITE_SECTIONS } from '@/lib/site-nav'
 import { getCategoryColor } from '@/lib/categories'
 import { categoriesQueryOptions } from '@/lib/queries/categories'
 import { eventsQueryOptions } from '@/lib/queries/events'
@@ -107,20 +107,21 @@ function App() {
   const color = getCategoryColor(selectedEvent?.categorySlug)
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-48 px-4 pt-8 pb-8">
+    <main className="mx-auto w-full min-w-0 max-w-7xl space-y-24 px-4 pt-6 pb-8 sm:space-y-32 md:space-y-48 sm:pt-8">
       <section id={SITE_SECTIONS.takvim} className={SECTION_SCROLL_CLASS}>
-        <div className="py-12 sm:py-16 md:py-20 lg:py-24">
+        <div className="py-8 sm:py-12 md:py-16 lg:py-24">
           <h1
-            className="mx-auto max-w-4xl text-center text-3xl font-bold tracking-tight text-pretty md:text-4xl lg:text-6xl lg:tracking-tighter"
+            className="mx-auto max-w-4xl text-center text-2xl font-bold tracking-tight text-pretty sm:text-3xl md:text-4xl lg:text-6xl lg:tracking-tighter"
           >
             Takvim Aboneliği
           </h1>
           <p
             className="mx-auto mt-6 max-w-3xl text-center text-sm text-muted-foreground md:text-base lg:text-xl"
           >
-            Dini günlerden İslam tarihine, milli bayramlardan Türk edebiyatına uzanan
-            etkinlik takvimlerini keşfedin. Kategorileri seçip iPhone, Google Takvim
-            veya Outlook takviminize abone olun.
+            {SITE_DESCRIPTION}
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-muted-foreground">
+            {SITE_SUBDESCRIPTION}
           </p>
         </div>
 

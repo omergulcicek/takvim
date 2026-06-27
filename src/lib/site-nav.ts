@@ -4,6 +4,12 @@ export const SECTION_HEADING_CLASS = 'text-lg font-semibold'
 export const SECTION_DESC_CLASS = 'text-sm text-muted-foreground'
 export const SECTION_NARROW_CLASS = 'mx-auto w-full max-w-4xl'
 
+export const SITE_DESCRIPTION =
+  'Aşağıdaki takvim, abone olacağınız günlerin önizlemesidir.'
+
+export const SITE_SUBDESCRIPTION =
+  'Beğendiğiniz kategorilere abone olduğunuzda seçtiğiniz günler kendi takvim uygulamanızda görünür. Etkinliklere tıklayarak ayrıntıları okuyabilirsiniz.'
+
 export const SITE_SECTIONS = {
   takvim: 'takvim',
   abonelik: 'abonelik',

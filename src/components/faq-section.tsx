@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 import {
   Accordion,
   AccordionContent,
@@ -12,7 +14,14 @@ import {
 } from '@/lib/site-nav'
 import { cn } from '@/lib/utils'
 
-const FAQ_ITEMS = [
+const GITHUB_ISSUES_URL = 'https://github.com/omergulcicek/takvim/issues/new'
+
+type FaqItem = {
+  question: string
+  answer: ReactNode
+}
+
+const FAQ_ITEMS: FaqItem[] = [
   {
     question: 'Takvim aboneliği ile .ics dosyası indirmek arasındaki fark nedir?',
     answer:
@@ -33,7 +42,24 @@ const FAQ_ITEMS = [
     answer:
       'Dini günlerde Hicri takvime göre tekrarlayan etkinlikler için Miladi tarihler, Diyanet İşleri Başkanlığı’nın yayımladığı anchor verileriyle eşleştirilir. Diğer kategorilerde Hicri bilgi varsa etkinlik kaydında gösterilir.',
   },
-] as const
+  {
+    question: 'Yeni etkinlik veya kategori nasıl ekleyebilirim?',
+    answer: (
+      <>
+        Yeni bir etkinlik, kategori veya düzeltme önerisi için{' '}
+        <a
+          href={GITHUB_ISSUES_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="font-medium text-primary underline-offset-4 hover:underline"
+        >
+          GitHub üzerinden issue açabilirsiniz
+        </a>
+        . Talebinizi mümkün olduğunca ayrıntılı yazmanız süreci hızlandırır.
+      </>
+    ),
+  },
+]
 
 export function FaqSection() {
   return (
