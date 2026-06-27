@@ -2,6 +2,9 @@ import { useMemo, useState } from 'react'
 import { Check, Copy, ExternalLink } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { Apple } from '@/components/ui/svgs/apple'
+import { Google } from '@/components/ui/svgs/google'
+import { MicrosoftOutlook } from '@/components/ui/svgs/microsoftOutlook'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { getCategoryColor } from '@/lib/categories'
@@ -15,6 +18,12 @@ type SubscriptionPanelProps = {
 }
 
 type DeviceGuide = 'apple' | 'google' | 'outlook'
+
+const DEVICE_ICONS: Record<DeviceGuide, typeof Apple> = {
+  apple: Apple,
+  google: Google,
+  outlook: MicrosoftOutlook,
+}
 
 type DeviceGuideContent = {
   label: string
@@ -234,17 +243,27 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
           Kullandığınız uygulamayı seçin ve adımları izleyin.
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
-          {(Object.keys(DEVICE_GUIDES) as DeviceGuide[]).map((key) => (
-            <Button
-              key={key}
-              type="button"
-              size="sm"
-              variant={deviceGuide === key ? 'default' : 'outline'}
-              onClick={() => setDeviceGuide(key)}
-            >
-              {DEVICE_GUIDES[key].label}
-            </Button>
-          ))}
+          {(Object.keys(DEVICE_GUIDES) as DeviceGuide[]).map((key) => {
+            const Icon = DEVICE_ICONS[key]
+            const selected = deviceGuide === key
+
+            return (
+              <Button
+                key={key}
+                type="button"
+                size="sm"
+                variant="outline"
+                className={cn(
+                  selected &&
+                    'border-primary bg-background font-medium shadow-sm ring-1 ring-ring',
+                )}
+                onClick={() => setDeviceGuide(key)}
+              >
+                <Icon data-icon="inline-start" />
+                {DEVICE_GUIDES[key].label}
+              </Button>
+            )
+          })}
         </div>
         <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-muted-foreground">
           {DEVICE_GUIDES[deviceGuide].steps.map((step) => (
