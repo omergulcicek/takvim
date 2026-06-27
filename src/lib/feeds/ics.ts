@@ -49,17 +49,7 @@ function foldIcsLine(line: string): string {
 }
 
 function buildDescription(event: CalendarEvent): string | null {
-  const parts: string[] = []
-  if (event.description) {
-    parts.push(event.description)
-  }
-  if (event.categoryName) {
-    parts.push(`Kategori: ${event.categoryName}`)
-  }
-  if (event.sourceUrl) {
-    parts.push(`Kaynak: ${event.sourceUrl}`)
-  }
-  return parts.length > 0 ? parts.join('\n\n') : null
+  return event.description ?? null
 }
 
 function calendarEventToLines(
