@@ -26,21 +26,17 @@ import {
   ChevronRight,
   Grid2x2,
   Grid3x3,
-  PanelLeft,
   Rows3,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Tooltip,
   TooltipContent,
@@ -48,6 +44,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { SECTION_HEADING_CLASS } from "@/lib/site-nav";
 import { getCategoryColor } from "@/lib/categories";
 import type { HijriDateFields } from "@/lib/hijri-date";
 
@@ -63,6 +60,9 @@ const MAX_VISIBLE_PER_DAY = 3;
 
 // Kategorisi olmayan event'ler için filtre anahtarı.
 const NO_CATEGORY_KEY = "__none__";
+
+// Tüm kategorileri göster.
+const ALL_CATEGORIES_KEY = "__all__";
 
 // Yıllık görünümde bir günde en fazla kaç renkli nokta gösterilsin.
 const MAX_DOTS_PER_DAY = 4;
@@ -265,29 +265,17 @@ export function MonthCalendar({
     [categoriesProp, events],
   );
 
-  // İşareti kaldırılan (gizlenen) kategori anahtarları. Varsayılan: hepsi açık.
-  const [hiddenCategories, setHiddenCategories] = useState<Set<string>>(
-    () => new Set(),
+  const [selectedCategoryKey, setSelectedCategoryKey] = useState(
+    ALL_CATEGORIES_KEY,
   );
 
   const visibleEvents = useMemo(() => {
-    if (hiddenCategories.size === 0) return events;
+    if (selectedCategoryKey === ALL_CATEGORIES_KEY) return events;
     return events.filter(
-      (event) => !hiddenCategories.has(event.categorySlug ?? NO_CATEGORY_KEY),
+      (event) =>
+        (event.categorySlug ?? NO_CATEGORY_KEY) === selectedCategoryKey,
     );
-  }, [events, hiddenCategories]);
-
-  function toggleCategory(key: string, checked: boolean) {
-    setHiddenCategories((prev) => {
-      const next = new Set(prev);
-      if (checked) {
-        next.delete(key);
-      } else {
-        next.add(key);
-      }
-      return next;
-    });
-  }
+  }, [events, selectedCategoryKey]);
 
   const weekdayLabels = useMemo(() => {
     const start = startOfWeek(new Date(), { weekStartsOn: WEEK_STARTS_ON });
@@ -336,75 +324,7 @@ export function MonthCalendar({
     <div className="flex w-full flex-col">
       <div className="mb-2 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-8 shrink-0 rounded-md"
-                aria-label="Kategorileri filtrele"
-              >
-                <PanelLeft size={16} />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="left"
-              className="flex h-full flex-col overflow-hidden px-3 py-4 sm:p-6"
-            >
-              <SheetHeader className="shrink-0 pr-8">
-                <SheetTitle>Kategoriler</SheetTitle>
-                <SheetDescription>
-                  İşareti kaldırılan kategoriler takvimde gizlenir.
-                </SheetDescription>
-              </SheetHeader>
-
-              <div className="mt-4 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overscroll-contain">
-                {categories.length === 0 && (
-                  <p className="text-sm text-muted-foreground">
-                    Gösterilecek kategori yok.
-                  </p>
-                )}
-                {categories.map((category) => {
-                  const color = getCategoryColor(category.slug);
-                  const checked = !hiddenCategories.has(category.key);
-                  const id = `category-${category.key}`;
-                  return (
-                    <Label
-                      key={category.key}
-                      htmlFor={id}
-                      className="flex cursor-pointer items-start gap-3 rounded-md px-2 py-2 leading-normal transition-colors hover:bg-accent"
-                    >
-                      <Checkbox
-                        id={id}
-                        checked={checked}
-                        onCheckedChange={(value) =>
-                          toggleCategory(category.key, value === true)
-                        }
-                        className="mt-0.5"
-                      />
-                      <span
-                        className={cn(
-                          "mt-1 size-2.5 shrink-0 rounded-full",
-                          color.dot,
-                        )}
-                        aria-hidden
-                      />
-                      <span className="min-w-0 flex-1">
-                        <span className="block">{category.name}</span>
-                        {category.desc && (
-                          <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
-                            {category.desc}
-                          </span>
-                        )}
-                      </span>
-                    </Label>
-                  );
-                })}
-              </div>
-            </SheetContent>
-          </Sheet>
-
-          <h2 className="text-lg font-semibold capitalize">
+          <h2 className={cn(SECTION_HEADING_CLASS, "capitalize")}>
             {view === "year"
               ? format(currentMonth, "yyyy", { locale: tr })
               : format(currentMonth, "LLLL yyyy", { locale: tr })}
@@ -457,6 +377,37 @@ export function MonthCalendar({
                 <TooltipContent>Yıllık görünüm</TooltipContent>
               </Tooltip>
             </div>
+
+            <Select
+              value={selectedCategoryKey}
+              onValueChange={setSelectedCategoryKey}
+            >
+              <SelectTrigger
+                size="sm"
+                className="w-56 [&_[data-slot=select-value]]:line-clamp-none"
+                aria-label="Kategori seç"
+              >
+                <SelectValue placeholder="Tüm Takvimler" />
+              </SelectTrigger>
+              <SelectContent align="end" position="popper" className="w-56">
+                <SelectItem value={ALL_CATEGORIES_KEY}>Tüm Takvimler</SelectItem>
+                {categories.map((category) => {
+                  const color = getCategoryColor(category.slug);
+                  return (
+                    <SelectItem key={category.key} value={category.key}>
+                      <span
+                        className={cn(
+                          "size-2 shrink-0 rounded-full",
+                          color.dot,
+                        )}
+                        aria-hidden
+                      />
+                      {category.name}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
 
             <div className="inline-flex items-center rounded-md border border-input p-0.5">
               <Tooltip>

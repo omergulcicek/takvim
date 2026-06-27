@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
 import type { CalendarEvent } from '@/components/month-calendar'
-import { serializeCalendarFeed } from '@/lib/feeds/ics'
+import {
+  buildFeedFilename,
+  createCalendarFeedResponse,
+  serializeCalendarFeed,
+} from '@/lib/feeds/ics'
 
 describe('serializeCalendarFeed', () => {
   it('emits a valid all-day event block', () => {
@@ -30,5 +34,26 @@ describe('serializeCalendarFeed', () => {
     expect(ics).toContain('DTEND;VALUE=DATE:20260102')
     expect(ics).toContain('CATEGORIES:Dini Günler')
     expect(ics).toContain('END:VCALENDAR')
+  })
+})
+
+describe('buildFeedFilename', () => {
+  it('uses ASCII slugs for Content-Disposition filenames', () => {
+    expect(buildFeedFilename('all')).toBe('all.ics')
+    expect(buildFeedFilename(['islam-tarihi'])).toBe('islam-tarihi.ics')
+    expect(buildFeedFilename(['dini-gunler', 'islam-tarihi'])).toBe(
+      'subscribe.ics',
+    )
+  })
+})
+
+describe('createCalendarFeedResponse', () => {
+  it('accepts Turkish calName with an ASCII filename header', () => {
+    const response = createCalendarFeedResponse([], 'İslam Tarihi', 'islam-tarihi.ics')
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('Content-Disposition')).toBe(
+      'inline; filename="islam-tarihi.ics"',
+    )
   })
 })

@@ -1,6 +1,8 @@
 {
-  "short_name": "TanStack App",
-  "name": "Create TanStack App Sample",
+  "short_name": "Takvim",
+  "name": "Takvim Aboneliği",
+  "description": "Dini günler, milli günler ve kültürel etkinlik takvimlerini keşfedin; iPhone, Google Takvim veya Outlook’a abone olun.",
+  "lang": "tr",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,7 +20,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"

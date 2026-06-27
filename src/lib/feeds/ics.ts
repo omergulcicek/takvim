@@ -144,15 +144,24 @@ export function serializeCalendarFeed(
   return lines.map(foldIcsLine).join('\r\n') + '\r\n'
 }
 
+export function buildFeedFilename(
+  categorySlugs: string[] | 'all',
+): string {
+  if (categorySlugs === 'all') return 'all.ics'
+  if (categorySlugs.length === 1) return `${categorySlugs[0]}.ics`
+  return 'subscribe.ics'
+}
+
 export function createCalendarFeedResponse(
   events: CalendarEvent[],
   calName: string,
+  filename: string,
 ): Response {
   const body = serializeCalendarFeed(events, calName)
   return new Response(body, {
     headers: {
       'Content-Type': 'text/calendar; charset=utf-8',
-      'Content-Disposition': `inline; filename="${calName.replace(/\s+/g, '-').toLowerCase()}.ics"`,
+      'Content-Disposition': `inline; filename="${filename}"`,
       'Cache-Control': 'public, max-age=3600',
     },
   })

@@ -16,7 +16,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { FaqSection } from '@/components/faq-section'
+import { HowToSubscribeSection } from '@/components/how-to-subscribe-section'
 import { SubscriptionPanel } from '@/components/subscription-panel'
+import { SECTION_SCROLL_CLASS, SITE_SECTIONS } from '@/lib/site-nav'
 import { getCategoryColor } from '@/lib/categories'
 import { categoriesQueryOptions } from '@/lib/queries/categories'
 import { eventsQueryOptions } from '@/lib/queries/events'
@@ -104,20 +107,41 @@ function App() {
   const color = getCategoryColor(selectedEvent?.categorySlug)
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 pb-8 pt-8">
-      <section className="w-full py-4 sm:py-6">
-        {mounted ? (
-          <MonthCalendar
-            events={events}
-            categories={categories}
-            onEventClick={handleEventClick}
-          />
-        ) : (
-          <div className="h-[640px] animate-pulse rounded-md bg-muted" />
-        )}
+    <main className="mx-auto w-full max-w-7xl space-y-48 px-4 pt-8 pb-8">
+      <section id={SITE_SECTIONS.takvim} className={SECTION_SCROLL_CLASS}>
+        <div className="py-12 sm:py-16 md:py-20 lg:py-24">
+          <h1
+            className="mx-auto max-w-4xl text-center text-3xl font-bold tracking-tight text-pretty md:text-4xl lg:text-6xl lg:tracking-tighter"
+          >
+            Takvim Aboneliği
+          </h1>
+          <p
+            className="mx-auto mt-6 max-w-3xl text-center text-sm text-muted-foreground md:text-base lg:text-xl"
+          >
+            Dini günlerden İslam tarihine, milli bayramlardan Türk edebiyatına uzanan
+            etkinlik takvimlerini keşfedin. Kategorileri seçip iPhone, Google Takvim
+            veya Outlook takviminize abone olun.
+          </p>
+        </div>
+
+        <div>
+          {mounted ? (
+            <MonthCalendar
+              events={events}
+              categories={categories}
+              onEventClick={handleEventClick}
+            />
+          ) : (
+            <div className="h-[640px] animate-pulse rounded-md bg-muted" />
+          )}
+        </div>
       </section>
 
       <SubscriptionPanel categories={categoryRows} />
+
+      <HowToSubscribeSection />
+
+      <FaqSection />
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>

@@ -1,7 +1,7 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import Header from '../components/Header'
+import { Layout } from '../components/Layout'
 
 import appCss from '../styles.css?url'
 
@@ -18,7 +18,12 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Takvim Aboneliği',
+      },
+      {
+        name: 'description',
+        content:
+          'Dini günlerden İslam tarihine, milli bayramlardan Türk edebiyatına uzanan etkinlik takvimlerini keşfedin. Kategorileri seçip iPhone, Google Takvim veya Outlook takviminize abone olun.',
       },
     ],
     links: [
@@ -33,14 +38,13 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="tr" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
       <body className="font-sans antialiased [overflow-wrap:anywhere]">
-        <Header />
-        {children}
+        <Layout>{children}</Layout>
         <TanStackDevtools
           config={{
             position: 'bottom-right',
