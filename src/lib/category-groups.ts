@@ -62,5 +62,7 @@ export function groupCategoriesForSelect<T extends CategoryForGrouping>(
 
   const ungrouped = categories.filter((category) => !usedKeys.has(category.key))
 
+  groups.sort((a, b) => a.label.localeCompare(b.label, 'tr'))
+
   return { groups, ungrouped }
 }

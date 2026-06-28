@@ -33,6 +33,15 @@ describe('groupCategoriesForSelect', () => {
     ])
   })
 
+  it('sorts groups alphabetically by label', () => {
+    const { groups } = groupCategoriesForSelect(categories)
+
+    expect(groups.map((group) => group.label)).toEqual([
+      'Din ve İnanç',
+      'Futbol',
+    ])
+  })
+
   it('leaves unknown categories ungrouped', () => {
     const { ungrouped } = groupCategoriesForSelect(categories)
 
