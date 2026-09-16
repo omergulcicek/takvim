@@ -25,6 +25,11 @@ type FaqItem = {
 
 const FAQ_ITEMS: FaqItem[] = [
   {
+    question: "Bu servis ücretsiz mi?",
+    answer:
+      "Evet, tamamen ücretsizdir. Herhangi bir ödeme, kayıt veya kredi kartı bilgisi gerekmez. Kategorileri seçip abone olmanız yeterlidir.",
+  },
+  {
     question: "Takvim aboneliği ile .ics dosyası indirmek arasındaki fark nedir?",
     answer:
       "Abonelik, takvim uygulamanızın belirli aralıklarla kaynağı yeniden okumasını sağlar; etkinlikler güncellendiğinde takviminiz de güncellenir. .ics dosyasını indirip yüklemek ise tek seferlik bir içe aktarmadır; sonradan kaynak değişse bile takviminiz otomatik yenilenmez.",

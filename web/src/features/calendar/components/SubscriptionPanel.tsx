@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import { Check, Copy, ExternalLink } from "lucide-react";
+import { Check, ChevronDown, Copy, ExternalLink } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { resolveSubscribeFeedUrl } from "@/lib/feeds/urls";
@@ -31,6 +31,14 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
   const allSlugs = useMemo(() => categories.map((category) => category.slug), [categories]);
   const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(() => new Set(allSlugs));
   const [copied, setCopied] = useState(false);
+  const [selectedListOpen, setSelectedListOpen] = useState(false);
+  const copiedResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copiedResetRef.current) clearTimeout(copiedResetRef.current);
+    };
+  }, []);
 
   const { groups: categoryGroups, ungrouped: ungroupedCategories } = useMemo(
     () =>
@@ -61,6 +69,9 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
     [categories, selectedSlugs],
   );
 
+  const allSelected = selectedList.length === allSlugs.length && allSlugs.length > 0;
+  const noneSelected = selectedList.length === 0;
+
   function toggleSlug(slug: string, checked: boolean) {
     setSelectedSlugs((prev) => {
       const next = new Set(prev);
@@ -82,12 +93,15 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
   function clearAll() {
     setSelectedSlugs(new Set());
     setCopied(false);
+    setSelectedListOpen(false);
   }
 
   async function copyFeedUrl() {
     if (!feedUrl) return;
     await navigator.clipboard.writeText(feedUrl);
     setCopied(true);
+    if (copiedResetRef.current) clearTimeout(copiedResetRef.current);
+    copiedResetRef.current = setTimeout(() => setCopied(false), 2000);
   }
 
   function subscribeWithWebcal() {
@@ -108,17 +122,15 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
         className={cn(
           "flex min-h-11 cursor-pointer items-start gap-3 rounded-lg px-3 py-2.5",
           "transition-colors duration-150 ease-out-strong",
-          "hover:bg-accent/80",
-          checked && "bg-accent/40",
+          "hover:bg-accent/50",
         )}
       >
         <Checkbox
           id={id}
           checked={checked}
           onCheckedChange={(value) => toggleSlug(category.slug, value === true)}
-          className="mt-0.5"
+          className={cn("mt-0.5", color.checkbox)}
         />
-        <span className={cn("mt-1.5 size-2.5 shrink-0 rounded-full", color.dot)} aria-hidden />
         <span className="min-w-0 flex-1">
           <span className="block text-sm font-medium">{category.name}</span>
           {category.desc && (
@@ -147,10 +159,24 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
-        <Button type="button" variant="outline" size="sm" onClick={selectAll}>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={selectAll}
+          disabled={allSelected}
+          aria-disabled={allSelected}
+        >
           Hepsi
         </Button>
-        <Button type="button" variant="outline" size="sm" onClick={clearAll}>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={clearAll}
+          disabled={noneSelected}
+          aria-disabled={noneSelected}
+        >
           Temizle
         </Button>
       </div>
@@ -184,7 +210,6 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
         ) : null}
       </div>
 
-      {/* outer 12 + pad 16 ≈ feed panel uses rounded-lg inside */}
       <div className="mt-5 rounded-xl bg-muted/40 p-4 shadow-surface">
         <p className="text-sm font-medium">Abonelik URL’si</p>
         {selectedList.length === 0 ? (
@@ -196,35 +221,81 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
             <p className="mt-2 rounded-lg bg-background/80 px-3 py-2 font-mono text-xs break-all tabular-nums sm:text-sm">
               {feedUrl}
             </p>
-            <p className="mt-2 text-xs text-pretty text-muted-foreground">
-              Seçili: {selectedNames.join(", ")}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Button type="button" size="sm" onClick={() => void copyFeedUrl()}>
-                <span className="relative size-4">
-                  <AnimatePresence initial={false} mode="wait">
-                    <motion.span
-                      key={copied ? "check" : "copy"}
-                      className="absolute inset-0 flex items-center justify-center"
-                      initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
-                      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                      exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
-                      transition={{ type: "spring", duration: 0.3, bounce: 0 }}
-                    >
-                      {copied ? (
-                        <Check className="size-4" strokeWidth={2} />
-                      ) : (
-                        <Copy className="size-4" strokeWidth={2} />
-                      )}
-                    </motion.span>
-                  </AnimatePresence>
-                </span>
-                {copied ? "Kopyalandı" : "URL’yi kopyala"}
-              </Button>
-              <Button type="button" size="sm" variant="secondary" onClick={subscribeWithWebcal}>
-                <ExternalLink className="size-4" strokeWidth={2} />
-                Abone ol
-              </Button>
+            <div className="mt-2">
+              <button
+                type="button"
+                className={cn(
+                  "inline-flex items-center gap-1 text-xs text-muted-foreground",
+                  "rounded-md transition-colors duration-150 ease-out-strong",
+                  "hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
+                )}
+                aria-expanded={selectedListOpen}
+                onClick={() => setSelectedListOpen((open) => !open)}
+              >
+                <span className="tabular-nums">{selectedNames.length} kategori seçildi</span>
+                <ChevronDown
+                  className={cn(
+                    "size-3.5 transition-transform duration-200 ease-out-strong",
+                    selectedListOpen && "rotate-180",
+                  )}
+                  strokeWidth={2}
+                  aria-hidden
+                />
+              </button>
+              <AnimatePresence initial={false}>
+                {selectedListOpen ? (
+                  <motion.ul
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2, ease: [0.2, 0, 0, 1] }}
+                    className="mt-1.5 overflow-hidden text-xs text-muted-foreground"
+                  >
+                    {selectedNames.map((name) => (
+                      <li key={name} className="py-0.5 pl-1">
+                        · {name}
+                      </li>
+                    ))}
+                  </motion.ul>
+                ) : null}
+              </AnimatePresence>
+            </div>
+            <div className="mt-3 flex flex-col gap-2">
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" size="sm" onClick={subscribeWithWebcal}>
+                  <ExternalLink className="size-4" strokeWidth={2} />
+                  Abone ol
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => void copyFeedUrl()}
+                >
+                  <span className="relative size-4">
+                    <AnimatePresence initial={false} mode="wait">
+                      <motion.span
+                        key={copied ? "check" : "copy"}
+                        className="absolute inset-0 flex items-center justify-center"
+                        initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+                        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                        exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+                        transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+                      >
+                        {copied ? (
+                          <Check className="size-4" strokeWidth={2} />
+                        ) : (
+                          <Copy className="size-4" strokeWidth={2} />
+                        )}
+                      </motion.span>
+                    </AnimatePresence>
+                  </span>
+                  {copied ? "Kopyalandı ✓" : "URL’yi kopyala"}
+                </Button>
+              </div>
+              <p className="text-xs text-pretty text-muted-foreground">
+                Abone ol uygulamayı doğrudan açar; URL’yi kopyala manuel yapıştırma içindir.
+              </p>
             </div>
           </>
         )}

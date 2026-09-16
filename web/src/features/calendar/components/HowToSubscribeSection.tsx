@@ -143,10 +143,36 @@ export function HowToSubscribeSection() {
           transition={{ duration: 0.25, ease: easeOut }}
           className="mt-4"
         >
-          <ol className="list-decimal space-y-2.5 pl-5 text-sm text-pretty text-muted-foreground">
-            {guide.steps.map((step) => (
-              <li key={step}>{step}</li>
-            ))}
+          <ol className="relative space-y-0">
+            {guide.steps.map((step, index) => {
+              const stepNumber = index + 1;
+              const isLast = index === guide.steps.length - 1;
+
+              return (
+                <li key={step} className="relative flex gap-3 pb-5 last:pb-0">
+                  {!isLast ? (
+                    <span
+                      aria-hidden
+                      className="absolute top-7 bottom-0 left-[15px] w-px bg-border"
+                    />
+                  ) : null}
+                  <span
+                    className={cn(
+                      "relative z-10 flex size-8 shrink-0 items-center justify-center",
+                      "rounded-full bg-muted text-xs font-semibold text-foreground tabular-nums",
+                      "ring-2 ring-background",
+                    )}
+                    aria-hidden
+                  >
+                    {stepNumber}
+                  </span>
+                  <p className="min-w-0 flex-1 pt-1.5 text-sm text-pretty text-muted-foreground">
+                    <span className="sr-only">Adım {stepNumber}: </span>
+                    {step}
+                  </p>
+                </li>
+              );
+            })}
           </ol>
           {guide.note && (
             <p className="mt-3 text-xs text-pretty text-muted-foreground">{guide.note}</p>

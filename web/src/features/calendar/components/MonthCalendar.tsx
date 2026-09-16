@@ -1,4 +1,5 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 
 import { ChevronLeft, ChevronRight, Grid2x2, Grid3x3, Rows3 } from "lucide-react";
 import {
@@ -30,7 +31,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { CalendarEventSearch } from "@/features/calendar/components/CalendarEventSearch";
-import { CategoryFilter } from "@/features/calendar/components/CategoryFilter";
 import { SECTION_HEADING_CLASS } from "@/features/calendar/data/site-nav";
 import { getCategoryColor } from "@/features/calendar/helpers/categories";
 
@@ -43,12 +43,6 @@ const DAY_CELL_HEIGHT_CLASS = "h-24 sm:h-28 md:h-32";
 // Bir hücrede en fazla kaç event gösterilsin; fazlası "+N" popover'ına gider.
 // Taşma varsa bir slot "+N" düğmesi için ayrılır.
 const MAX_VISIBLE_PER_DAY = 3;
-
-// Kategorisi olmayan event'ler için filtre anahtarı.
-const NO_CATEGORY_KEY = "__none__";
-
-// Tüm kategorileri göster.
-const ALL_CATEGORIES_KEY = "__all__";
 
 // Yıllık görünümde bir günde en fazla kaç renkli nokta gösterilsin.
 const MAX_DOTS_PER_DAY = 4;
@@ -70,43 +64,6 @@ export type CalendarEvent = {
 };
 
 type CalendarView = "month" | "year" | "list";
-
-export type CalendarCategory = {
-  key: string;
-  name: string;
-  slug: string | null;
-  desc: string | null;
-};
-
-// Event listesinden, takvimde geçen benzersiz kategorileri çıkarır.
-function deriveCategories(events: CalendarEvent[]): CalendarCategory[] {
-  const map = new Map<string, CalendarCategory>();
-  for (const event of events) {
-    if (event.categories.length === 0) {
-      if (!map.has(NO_CATEGORY_KEY)) {
-        map.set(NO_CATEGORY_KEY, {
-          key: NO_CATEGORY_KEY,
-          name: "Kategorisiz",
-          slug: null,
-          desc: null,
-        });
-      }
-    } else {
-      for (const cat of event.categories) {
-        const key = cat.slug ?? NO_CATEGORY_KEY;
-        if (!map.has(key)) {
-          map.set(key, {
-            key,
-            name: cat.name ?? "Kategorisiz",
-            slug: cat.slug,
-            desc: cat.desc ?? null,
-          });
-        }
-      }
-    }
-  }
-  return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name, "tr"));
-}
 
 function eventsForDay(events: CalendarEvent[], day: Date): CalendarEvent[] {
   const dayStart = startOfDay(day);
@@ -252,32 +209,27 @@ function ListEventRow({
 
 export function MonthCalendar({
   events,
-  categories: categoriesProp,
+  selectedCategorySlugs,
   onEventClick,
+  toolbarStart,
 }: {
   events: CalendarEvent[];
-  categories?: CalendarCategory[];
+  selectedCategorySlugs?: ReadonlySet<string>;
   onEventClick?: (event: CalendarEvent) => void;
+  toolbarStart?: ReactNode;
 }) {
   const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()));
   const [view, setView] = useState<CalendarView>("month");
 
-  const categories = useMemo(
-    () => categoriesProp ?? deriveCategories(events),
-    [categoriesProp, events],
-  );
-
-  const [selectedCategoryKey, setSelectedCategoryKey] = useState(ALL_CATEGORIES_KEY);
-
   const visibleEvents = useMemo(() => {
-    if (selectedCategoryKey === ALL_CATEGORIES_KEY) return events;
-    return events.filter((event) => {
-      if (event.categories.length === 0) {
-        return selectedCategoryKey === NO_CATEGORY_KEY;
-      }
-      return event.categories.some((cat) => (cat.slug ?? NO_CATEGORY_KEY) === selectedCategoryKey);
-    });
-  }, [events, selectedCategoryKey]);
+    if (selectedCategorySlugs == null) return events;
+    return events.filter((event) =>
+      event.categories.some((category) => {
+        if (category.slug == null) return false;
+        return selectedCategorySlugs.has(category.slug);
+      }),
+    );
+  }, [events, selectedCategorySlugs]);
 
   const weekdayLabels = useMemo(() => {
     const start = startOfWeek(new Date(), { weekStartsOn: WEEK_STARTS_ON });
@@ -303,7 +255,6 @@ export function MonthCalendar({
   const today = startOfDay(new Date());
 
   function handleSearchSelect(event: CalendarEvent) {
-    setSelectedCategoryKey(ALL_CATEGORIES_KEY);
     setCurrentMonth(startOfMonth(event.start));
     setView("month");
     onEventClick?.(event);
@@ -415,16 +366,6 @@ export function MonthCalendar({
     </div>
   );
 
-  const categorySelect = (
-    <CategoryFilter
-      categories={categories}
-      value={selectedCategoryKey}
-      allValue={ALL_CATEGORIES_KEY}
-      allLabel="Tüm Takvimler"
-      onValueChange={setSelectedCategoryKey}
-    />
-  );
-
   return (
     <div className="flex w-full min-w-0 flex-col">
       <TooltipProvider delayDuration={200}>
@@ -440,8 +381,8 @@ export function MonthCalendar({
 
           <div className="flex items-center gap-2 md:shrink-0">
             <CalendarEventSearch events={events} onSelect={handleSearchSelect} />
+            {toolbarStart}
             {viewControls}
-            <div className="flex min-w-0 flex-1 justify-end md:flex-none">{categorySelect}</div>
             <div className="hidden md:block">{navControls}</div>
           </div>
         </div>
@@ -465,7 +406,7 @@ export function MonthCalendar({
           </div>
         </TooltipProvider>
       ) : view === "list" ? (
-        <div className="-mx-4 flex flex-col divide-y border-y sm:mx-0 sm:overflow-hidden sm:rounded-xl sm:border-0 sm:shadow-surface">
+        <div className="-mx-4 flex flex-col divide-y border-y sm:mx-0 sm:overflow-hidden sm:rounded-b-xl sm:border-0 sm:shadow-surface">
           {listEvents.length === 0 ? (
             <p className="px-4 py-8 text-center text-sm text-muted-foreground">
               Bu ay gösterilecek bir şey yok.
@@ -484,7 +425,7 @@ export function MonthCalendar({
       ) : (
         <>
           <div className="min-w-0 overflow-x-auto">
-            <div className="min-w-[280px] overflow-hidden rounded-xl shadow-surface">
+            <div className="min-w-[280px] overflow-hidden rounded-b-xl shadow-surface">
               <div className="grid grid-cols-7 border-b bg-muted/30 text-center text-[10px] font-medium tracking-wide text-muted-foreground uppercase sm:text-xs">
                 {weekdayLabels.map((label) => (
                   <div key={label} className="py-1.5 sm:py-2">

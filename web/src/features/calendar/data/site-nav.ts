@@ -4,10 +4,8 @@ export const SECTION_HEADING_CLASS = "text-xl font-semibold tracking-tight";
 export const SECTION_DESC_CLASS = "text-sm text-muted-foreground";
 export const SECTION_NARROW_CLASS = "mx-auto w-full max-w-4xl";
 
-export const SITE_DESCRIPTION = "Aşağıdaki takvim, abone olacağınız günlerin önizlemesidir.";
-
-export const SITE_SUBDESCRIPTION =
-  "Kategorileri seçip abone olduğunuzda etkinlikler Apple, Google veya Outlook takviminizde otomatik güncellenir.";
+export const SITE_DESCRIPTION =
+  "İlgilendiğiniz kategorileri seçin, takviminize ücretsiz ekleyin; dosya indirmeden, etkinlikler otomatik güncellenir.";
 
 export const SITE_SECTIONS = {
   takvim: "takvim",
