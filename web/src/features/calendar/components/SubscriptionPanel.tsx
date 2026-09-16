@@ -23,13 +23,18 @@ import { groupCategoriesForSelect } from "@/features/calendar/helpers/category-g
 
 type SubscriptionPanelProps = {
   categories: CategoryRow[];
+  selectedSlugs: ReadonlySet<string>;
+  onSelectedSlugsChange: (next: Set<string>) => void;
 };
 
 type GroupableCategory = CategoryRow & { key: string };
 
-export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
+export function SubscriptionPanel({
+  categories,
+  selectedSlugs,
+  onSelectedSlugsChange,
+}: SubscriptionPanelProps) {
   const allSlugs = useMemo(() => categories.map((category) => category.slug), [categories]);
-  const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(() => new Set(allSlugs));
   const [copied, setCopied] = useState(false);
   const [selectedListOpen, setSelectedListOpen] = useState(false);
   const copiedResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -39,6 +44,10 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
       if (copiedResetRef.current) clearTimeout(copiedResetRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    setCopied(false);
+  }, [selectedSlugs]);
 
   const { groups: categoryGroups, ungrouped: ungroupedCategories } = useMemo(
     () =>
@@ -73,25 +82,23 @@ export function SubscriptionPanel({ categories }: SubscriptionPanelProps) {
   const noneSelected = selectedList.length === 0;
 
   function toggleSlug(slug: string, checked: boolean) {
-    setSelectedSlugs((prev) => {
-      const next = new Set(prev);
-      if (checked) {
-        next.add(slug);
-      } else {
-        next.delete(slug);
-      }
-      return next;
-    });
+    const next = new Set(selectedSlugs);
+    if (checked) {
+      next.add(slug);
+    } else {
+      next.delete(slug);
+    }
+    onSelectedSlugsChange(next);
     setCopied(false);
   }
 
   function selectAll() {
-    setSelectedSlugs(new Set(allSlugs));
+    onSelectedSlugsChange(new Set(allSlugs));
     setCopied(false);
   }
 
   function clearAll() {
-    setSelectedSlugs(new Set());
+    onSelectedSlugsChange(new Set());
     setCopied(false);
     setSelectedListOpen(false);
   }

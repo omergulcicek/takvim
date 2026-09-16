@@ -79,7 +79,11 @@ export function CalendarPage() {
 
       <div className="space-y-20 px-4 sm:space-y-28 md:space-y-32">
         <Reveal>
-          <SubscriptionPanel categories={categoryRows} />
+          <SubscriptionPanel
+            categories={categoryRows}
+            selectedSlugs={selectedCategorySlugs}
+            onSelectedSlugsChange={setSelectedCategorySlugs}
+          />
         </Reveal>
 
         <Reveal>
