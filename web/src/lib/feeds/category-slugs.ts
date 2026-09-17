@@ -2,6 +2,7 @@
 const LEGACY_CATEGORY_SLUGS: Record<string, string> = {
   "islam-alimleri": "onemli-sahsiyetler",
   "savas-ve-fetihler": "tarihi-olaylar",
+  "dunya-kupasi": "milli-takimlar",
 };
 
 export function resolveCategorySlug(slug: string): string {

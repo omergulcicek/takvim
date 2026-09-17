@@ -118,7 +118,7 @@ export const CATEGORY_COLOR_MAP: Record<string, CategoryColorKey> = {
   "onemli-sahsiyetler": "indigo600",
   "tarihi-olaylar": "stone700",
   "turk-edebiyati": "blue600",
-  "dunya-kupasi": "green400",
+  "milli-takimlar": "green400",
   "sampiyonlar-ligi": "green400",
   "premier-lig": "green400",
   "la-liga": "green400",

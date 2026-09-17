@@ -13,11 +13,17 @@ This file serves as a persistent memory bank for the project. It documents key d
 - **2026-08-17 - Premier Lig / La Liga description:** Lig maçlarına `description` yazılmaz (`NULL`). Title formatı: `Ev Sahibi - Deplasman`. Süre: başlangıç + 2 saat (`00:00` → 23:55). Timezone: `Europe/Istanbul`. Yalnızca lig kategorisine bağlanır (`premier-lig` / `la-liga`); ayrı kulüp kategorisi yok.
 - **2026-08-02 - Süper Lig description:** Süper Lig maçlarına `description` yazılmaz (`NULL`). Title formatı: `Ev Sahibi - Deplasman`. Süre: başlangıç + 2 saat. Timezone: `Europe/Istanbul`. Sadece ilgili kulüp kategorisine bağlanır (ayrı Süper Lig kategorisi yok).
 - **2026-08-03 - Event kural seti:** Tam şablon → [`docs/event-data-rules.md`](./event-data-rules.md) (maç ekleme, gol/sonuç, şahsiyet, tarihi olay). Eski ad: `event-ekleme-kurallari.md`.
-- **2026-08-03 - Weekly fixture sync:** Invoke-only runbook → [`docs/weekly-fixture-sync.md`](./weekly-fixture-sync.md). Kapsam: 4 büyük + `sampiyonlar-ligi`; pencere: çağrı günü → +7 gün; bitmemiş maça skor yazılmaz; log: `docs/logs/YYYY-MM-DD-haftalik-kontrol.md`.
+- **2026-08-29 - Weekly fixture sync:** Runbook → [`docs/weekly-fixture-sync.md`](./weekly-fixture-sync.md). **12 kulüp:** GS, FB, BJK, TS; Arsenal, Liverpool, Man City, Man United, Tottenham, Chelsea; Barcelona, Real Madrid. Pencere: +14 gün. İş: (1) **lig + UCL** maçlarını ekle (UCL yalnızca ≥1 takip kulübü varsa — örn. Barcelona–Lyon evet, Lyon–Porto hayır), (2) kickoff düzelt, (3) yalnızca **FT** skor. Log: `docs/logs/YYYY-MM-DD-haftalik-kontrol.md`.
 - **2026-08-03 - Saat belirsiz:** Kickoff henüz net değilse maçı atlama; `12:00` (`Europe/Istanbul`) placeholder ile ekle, saat netleşince `UPDATE` et.
 
 ## Evolution
 
+- **2026-09-17 - Hazırlık kuralı:** Millî takım **hazırlık** maçları yalnızca **Türkiye** için eklenir; diğer takip edilen ülkelerin dostluk maçları (örn. Brezilya–Avustralya) kapsam dışı.
+- **2026-09-17 - Tracked national teams:** Weekly sync’e 8 millî takım eklendi — İspanya, Arjantin, Fransa, İngiltere, Brezilya, Portekiz, Almanya, Türkiye. Kategori: `milli-takimlar`; yalnızca ≥1 takip edilen taraf + net kickoff.
+- **2026-09-17 - Millî Takımlar:** `dunya-kupasi` → `milli-takimlar` (`Millî Takımlar`). Desc: Dünya Kupası, Uluslar Ligi, Copa América vb. Eski feed slug’ı `LEGACY_CATEGORY_SLUGS` ile yönlendirilir.
+- **2026-09-17 - Barcelona–Racing erken skor:** Live iken 4-2 yazılmıştı; FT **6-2** ile düzeltildi. Runbook FT check sıkılaştırıldı: dakika saati / `Live` / `Second Half` varken migration yok; skor varlığı ≠ FT.
+- **2026-08-23 - Espanyol–Real Madrid düzeltme:** Maç devam ederken 1-1 yazılmıştı; FT **1-2** (Calatrava 30'; Bellingham 9', Espí 90'). Runbook’a FT zorunluluğu ve “günün maçları” tanımı eklendi.
+- **2026-08-22 - Weekly sync kapsamı:** `premier-lig` ve `la-liga` eklendi; penceredeki tüm futbol maçları (yalnızca Türkiye kulüpleri değil). Arsenal–Coventry FT 3-0 catch-up.
 - **2026-08-17 - 00:00 bitiş clamp:** Timed maçlarda TR `00:00` bitiş → kickoff günü `23:55`.
 - **2026-08-17 - Premier Lig fikstürü:** Arsenal, Liverpool, Manchester City, Manchester United, Tottenham ve Chelsea'nin Ağustos–Eylül maçları → `premier-lig`. Biten maçlar, saati belirsiz kayıtlar ve Lig Kupası atlandı. Derbiler tek event.
 - **2026-08-17 - Premier Lig ve La Liga:** Futbol grubuna `premier-lig` ve `la-liga` kategorileri eklendi. Lig maçlarında `description NULL`; yalnızca lig slug'ı bağlanır (ayrı kulüp kategorisi yok). La Liga'ya Barcelona ve Real Madrid'in Ağustos–Eylül fikstürü eklendi.

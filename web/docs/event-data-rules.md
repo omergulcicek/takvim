@@ -52,13 +52,15 @@ Do **not** put the score in the title before kickoff.
 
 ### 2.2 Description (pre-match)
 
-| Competition                 | Description                                                   |
-| --------------------------- | ------------------------------------------------------------- |
-| Süper Lig                   | **`NULL`** — omit                                             |
-| La Liga                     | **`NULL`** — omit                                             |
-| Premier Lig                 | **`NULL`** — omit                                             |
-| Europa League qualifying    | `'Avrupa Ligi … eleme turu ilk maç'` / `'… rövanş maçı'`      |
-| Champions League qualifying | `'Şampiyonlar Ligi … eleme turu ilk maç'` / `'… rövanş maçı'` |
+| Competition                 | Description                                                                       |
+| --------------------------- | --------------------------------------------------------------------------------- |
+| Süper Lig                   | **`NULL`** — omit                                                                 |
+| La Liga                     | **`NULL`** — omit                                                                 |
+| Premier Lig                 | **`NULL`** — omit                                                                 |
+| Europa League qualifying    | `'Avrupa Ligi … eleme turu ilk maç'` / `'… rövanş maçı'`                          |
+| Champions League qualifying | `'Şampiyonlar Ligi … eleme turu ilk maç'` / `'… rövanş maçı'`                     |
+| UEFA Nations League         | `'Uluslar Ligi lig aşaması — N. hafta'`                                           |
+| National-team friendly      | `'Hazırlık maçı'` — **yalnızca Türkiye** maçları (diğer NT hazırlıkları eklenmez) |
 
 ### 2.3 Category links
 
@@ -69,7 +71,7 @@ Do **not** put the score in the title before kickoff.
 | Premier Lig      | `premier-lig`                                                                                                              |
 | Champions League | Club **+** `sampiyonlar-ligi`                                                                                              |
 | Europa League    | Club only for now (no `avrupa-ligi` category)                                                                              |
-| World Cup        | `dunya-kupasi`                                                                                                             |
+| Millî Takımlar   | `milli-takimlar` (Dünya Kupası, Uluslar Ligi, Copa América vb.)                                                            |
 
 > There is **no** separate Süper Lig category.
 

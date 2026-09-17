@@ -10,14 +10,14 @@ export const CATEGORY_GROUPS: readonly CategoryGroupDefinition[] = [
   {
     label: "Futbol",
     nested: true,
-    colorSlug: "dunya-kupasi",
+    colorSlug: "milli-takimlar",
     // Kulüpler önce, turnuvalar sonra (Türkçe alfabetik değil; okuma sırası).
     slugs: [
       "besiktas",
       "fenerbahce",
       "galatasaray",
       "trabzonspor",
-      "dunya-kupasi",
+      "milli-takimlar",
       "sampiyonlar-ligi",
       "premier-lig",
       "la-liga",
