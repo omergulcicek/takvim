@@ -507,25 +507,33 @@ function MiniMonth({
         {format(month, "LLLL", { locale: tr })}
       </div>
 
-      <div className="grid grid-cols-7 gap-y-1">
+      <div className="grid grid-cols-7">
         {days.map((day) => {
           const dayEvents = eventsForDay(events, day);
           const inMonth = isSameMonth(day, month);
 
+          const showDots = inMonth && dayEvents.length > 0;
+
           return (
-            <div key={day.toISOString()} className="flex flex-col items-center gap-0.5">
+            <div
+              key={day.toISOString()}
+              className={cn(
+                "flex h-full w-full cursor-default flex-col items-center justify-center rounded px-1 py-2 transition-colors duration-100 ease-out-strong",
+                isToday(day) ? "border border-border" : "hover:bg-foreground/10",
+              )}
+            >
               <span
                 className={cn(
-                  "flex size-6 items-center justify-center rounded-full text-xs tabular-nums",
+                  "text-xs leading-none tabular-nums",
                   !inMonth && "text-muted-foreground/40",
-                  isToday(day) && "bg-primary font-semibold text-primary-foreground",
+                  isToday(day) && "font-semibold",
                 )}
               >
                 {format(day, "d")}
               </span>
 
-              {inMonth && dayEvents.length > 0 && (
-                <div className="flex min-h-3 max-w-full items-center justify-center gap-0.5 px-0.5 py-0.5">
+              {showDots && (
+                <div className="mt-1 flex max-w-full items-center justify-center gap-0.5">
                   {dayEvents.slice(0, MAX_DOTS_PER_DAY).map((event) => {
                     const firstCategory = event.categories[0];
                     const color = getCategoryColor(firstCategory?.slug);
@@ -537,7 +545,7 @@ function MiniMonth({
                             onClick={() => onEventClick?.(event)}
                             aria-label={event.title}
                             className={cn(
-                              "size-1.5 shrink-0 cursor-pointer rounded-full transition-transform hover:scale-150",
+                              "size-1 shrink-0 cursor-pointer rounded-full transition-transform hover:scale-150",
                               color.dot,
                             )}
                           />
