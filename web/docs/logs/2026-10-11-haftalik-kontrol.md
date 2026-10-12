@@ -26,28 +26,28 @@
 
 ## Fixture discovery (league + UEFA + NT, 2-week window)
 
-| Event | Competition | Kickoff (source, TR) | In DB? | Action |
-| --- | --- | --- | --- | --- |
-| Liverpool - Brighton | Premier Lig | 2026-10-25 17:00 | no | add fixture |
-| Manchester United - Bournemouth | Premier Lig | 2026-10-25 17:00 | no | add fixture |
-| Barcelona - Real Madrid | La Liga | 2026-10-25 23:00 | no | add fixture |
-| 11–24 Eki takip lig / UCL / UEL / UECL | — | kaynakla aynı | yes | kickoff değişmedi |
-| Millî takım | Uluslar Ligi | — | — | pencerede maç yok; sonraki 12–15 Kasım |
+| Event                                  | Competition  | Kickoff (source, TR) | In DB? | Action                                 |
+| -------------------------------------- | ------------ | -------------------- | ------ | -------------------------------------- |
+| Liverpool - Brighton                   | Premier Lig  | 2026-10-25 17:00     | no     | add fixture                            |
+| Manchester United - Bournemouth        | Premier Lig  | 2026-10-25 17:00     | no     | add fixture                            |
+| Barcelona - Real Madrid                | La Liga      | 2026-10-25 23:00     | no     | add fixture                            |
+| 11–24 Eki takip lig / UCL / UEL / UECL | —            | kaynakla aynı        | yes    | kickoff değişmedi                      |
+| Millî takım                            | Uluslar Ligi | —                    | —      | pencerede maç yok; sonraki 12–15 Kasım |
 
 ## Events checked
 
-| Event | Kickoff (DB) | Kickoff (source) | Status | Action |
-| --- | --- | --- | --- | --- |
-| Arsenal 2 - 1 Leeds United | 2026-10-10 14:30 | 2026-10-10 14:30 | finished 2-1 | none (zaten skorlu) |
-| Samsunspor 0 - 3 Trabzonspor | 2026-10-10 16:00 | 2026-10-10 16:00 | finished 0-3 | none (zaten skorlu) |
-| Chelsea - Bournemouth | 2026-10-10 17:00 | 2026-10-10 17:00 | finished 5-1 | update result |
-| Ç. Rizespor - Fenerbahçe | 2026-10-10 19:00 | 2026-10-10 19:00 | finished 0-3 | update result |
-| Barcelona - Getafe | 2026-10-10 19:30 | 2026-10-10 19:30 | finished 3-0 | update result |
-| Manchester United - Tottenham | 2026-10-10 19:30 | 2026-10-10 19:30 | finished 1-1 | update result |
-| Real Madrid - Villarreal | 2026-10-10 22:00 | 2026-10-10 22:00 | finished 1-0 | update result |
-| Liverpool - Manchester City | 2026-10-11 18:30 | 2026-10-11 18:30 | scheduled | none |
-| Beşiktaş - Kocaelispor | 2026-10-11 19:00 | 2026-10-11 19:00 | scheduled | none |
-| 13–24 Eki, 33 maç | DB saati | kaynakla aynı | scheduled | none |
+| Event                         | Kickoff (DB)     | Kickoff (source) | Status       | Action              |
+| ----------------------------- | ---------------- | ---------------- | ------------ | ------------------- |
+| Arsenal 2 - 1 Leeds United    | 2026-10-10 14:30 | 2026-10-10 14:30 | finished 2-1 | none (zaten skorlu) |
+| Samsunspor 0 - 3 Trabzonspor  | 2026-10-10 16:00 | 2026-10-10 16:00 | finished 0-3 | none (zaten skorlu) |
+| Chelsea - Bournemouth         | 2026-10-10 17:00 | 2026-10-10 17:00 | finished 5-1 | update result       |
+| Ç. Rizespor - Fenerbahçe      | 2026-10-10 19:00 | 2026-10-10 19:00 | finished 0-3 | update result       |
+| Barcelona - Getafe            | 2026-10-10 19:30 | 2026-10-10 19:30 | finished 3-0 | update result       |
+| Manchester United - Tottenham | 2026-10-10 19:30 | 2026-10-10 19:30 | finished 1-1 | update result       |
+| Real Madrid - Villarreal      | 2026-10-10 22:00 | 2026-10-10 22:00 | finished 1-0 | update result       |
+| Liverpool - Manchester City   | 2026-10-11 18:30 | 2026-10-11 18:30 | scheduled    | none                |
+| Beşiktaş - Kocaelispor        | 2026-10-11 19:00 | 2026-10-11 19:00 | scheduled    | none                |
+| 13–24 Eki, 33 maç             | DB saati         | kaynakla aynı    | scheduled    | none                |
 
 ## Migrations
 

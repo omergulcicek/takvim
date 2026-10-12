@@ -24,21 +24,21 @@
 
 ## Fixture discovery (league + UEFA + NT, 2-week window)
 
-| Event | Competition | Kickoff (source, TR) | In DB? | Action |
-| --- | --- | --- | --- | --- |
-| 12–25 Eki takip lig / UCL / UEL / UECL | — | kaynakla aynı | yes | kickoff değişmedi |
-| Ç. Rizespor - Trabzonspor | Süper Lig | 2026-10-26 19:00 | yes | none |
-| Beşiktaş - Başakşehir | Süper Lig | 2026-10-26 19:00 | yes | none |
-| Galatasaray - Fenerbahçe | Süper Lig | 2026-10-26 21:30 | yes | none |
-| Millî takım | Uluslar Ligi / hazırlık | — | — | pencerede maç yok; sonraki 12–14 Kasım |
+| Event                                  | Competition             | Kickoff (source, TR) | In DB? | Action                                 |
+| -------------------------------------- | ----------------------- | -------------------- | ------ | -------------------------------------- |
+| 12–25 Eki takip lig / UCL / UEL / UECL | —                       | kaynakla aynı        | yes    | kickoff değişmedi                      |
+| Ç. Rizespor - Trabzonspor              | Süper Lig               | 2026-10-26 19:00     | yes    | none                                   |
+| Beşiktaş - Başakşehir                  | Süper Lig               | 2026-10-26 19:00     | yes    | none                                   |
+| Galatasaray - Fenerbahçe               | Süper Lig               | 2026-10-26 21:30     | yes    | none                                   |
+| Millî takım                            | Uluslar Ligi / hazırlık | —                    | —      | pencerede maç yok; sonraki 12–14 Kasım |
 
 ## Events checked
 
-| Event | Kickoff (DB) | Kickoff (source) | Status | Action |
-| --- | --- | --- | --- | --- |
+| Event                       | Kickoff (DB)     | Kickoff (source) | Status       | Action        |
+| --------------------------- | ---------------- | ---------------- | ------------ | ------------- |
 | Liverpool - Manchester City | 2026-10-11 18:30 | 2026-10-11 18:30 | finished 0-3 | update result |
-| Beşiktaş - Kocaelispor | 2026-10-11 19:00 | 2026-10-11 19:00 | finished 2-1 | update result |
-| 12–26 Eki, 39 maç | DB saati | kaynakla aynı | scheduled | none |
+| Beşiktaş - Kocaelispor      | 2026-10-11 19:00 | 2026-10-11 19:00 | finished 2-1 | update result |
+| 12–26 Eki, 39 maç           | DB saati         | kaynakla aynı    | scheduled    | none          |
 
 ## Migrations
 
