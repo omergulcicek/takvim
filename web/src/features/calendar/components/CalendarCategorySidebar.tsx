@@ -12,8 +12,10 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import type { CategoryRow } from "@/features/calendar/api/categories";
 import { getCategoryColor } from "@/features/calendar/helpers/categories";
 import { groupCategoriesForSelect } from "@/features/calendar/helpers/category-groups";
+import type { CategorySelectGroup } from "@/features/calendar/helpers/category-groups";
 
 type GroupableCategory = CategoryRow & { key: string };
+type FilterGroup = CategorySelectGroup<GroupableCategory>;
 
 type CalendarCategorySidebarProps = {
   categories: CategoryRow[];
@@ -23,17 +25,40 @@ type CalendarCategorySidebarProps = {
   onMobileSheetOpenChange: (open: boolean) => void;
 };
 
+function selectionState(
+  slugs: readonly string[],
+  selectedSlugs: ReadonlySet<string>,
+): boolean | "indeterminate" {
+  const selectedCount = slugs.reduce((count, slug) => count + (selectedSlugs.has(slug) ? 1 : 0), 0);
+  if (selectedCount === 0) return false;
+  if (selectedCount === slugs.length) return true;
+  return "indeterminate";
+}
+
+function withIndeterminateStyles(checkboxClass: string): string {
+  return checkboxClass
+    .split(" ")
+    .flatMap((token) =>
+      token.includes("data-[state=checked]:")
+        ? [token, token.replaceAll("data-[state=checked]:", "data-[state=indeterminate]:")]
+        : [token],
+    )
+    .join(" ");
+}
+
 function CategoryFilterList({
   groups,
   ungrouped,
   selectedSlugs,
   onToggle,
+  onToggleGroup,
   idPrefix,
 }: {
-  groups: { label: string; categories: GroupableCategory[] }[];
+  groups: FilterGroup[];
   ungrouped: GroupableCategory[];
   selectedSlugs: ReadonlySet<string>;
   onToggle: (slug: string, checked: boolean) => void;
+  onToggleGroup: (slugs: readonly string[], checked: boolean) => void;
   idPrefix: string;
 }): JSX.Element {
   function renderCategoryCheckbox(category: GroupableCategory) {
@@ -62,6 +87,33 @@ function CategoryFilterList({
     );
   }
 
+  function renderGroupToggle(group: FilterGroup) {
+    const slugs = group.categories.map((category) => category.slug);
+    const checked = selectionState(slugs, selectedSlugs);
+    const color = getCategoryColor(group.colorSlug);
+    const id = `${idPrefix}-group-${group.label.toLocaleLowerCase("tr").replace(/\s+/g, "-")}`;
+
+    return (
+      <Label
+        key={id}
+        htmlFor={id}
+        className={cn(
+          "flex min-h-9 cursor-pointer items-center gap-2.5 rounded-lg px-0 py-1.5",
+          "transition-colors duration-150 ease-out-strong",
+          "hover:bg-accent/50",
+        )}
+      >
+        <Checkbox
+          id={id}
+          checked={checked}
+          onCheckedChange={(value) => onToggleGroup(slugs, value === true)}
+          className={withIndeterminateStyles(color.checkbox)}
+        />
+        <span className="min-w-0 flex-1 truncate text-sm font-medium">{group.label}</span>
+      </Label>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
       {groups.map((group) => (
@@ -70,7 +122,10 @@ function CategoryFilterList({
             {group.label}
           </h3>
           <div className="flex flex-col gap-0.5">
-            {group.categories.map(renderCategoryCheckbox)}
+            {group.nested ? renderGroupToggle(group) : null}
+            <div className={cn("flex flex-col gap-0.5", group.nested && "ps-4")}>
+              {group.categories.map(renderCategoryCheckbox)}
+            </div>
           </div>
         </div>
       ))}
@@ -137,6 +192,18 @@ export function CalendarCategorySidebar({
     onSelectedSlugsChange(next);
   }
 
+  function toggleGroup(slugs: readonly string[], checked: boolean) {
+    const next = new Set(selectedSlugs);
+    for (const slug of slugs) {
+      if (checked) {
+        next.add(slug);
+      } else {
+        next.delete(slug);
+      }
+    }
+    onSelectedSlugsChange(next);
+  }
+
   return (
     <>
       <Sheet open={mobileSheetOpen} onOpenChange={onMobileSheetOpenChange}>
@@ -152,6 +219,7 @@ export function CalendarCategorySidebar({
             ungrouped={ungrouped}
             selectedSlugs={selectedSlugs}
             onToggle={toggleSlug}
+            onToggleGroup={toggleGroup}
             idPrefix="calendar-filter-sheet"
           />
         </SheetContent>
@@ -169,6 +237,7 @@ export function CalendarCategorySidebar({
           ungrouped={ungrouped}
           selectedSlugs={selectedSlugs}
           onToggle={toggleSlug}
+          onToggleGroup={toggleGroup}
           idPrefix="calendar-filter"
         />
       </aside>
