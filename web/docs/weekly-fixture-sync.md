@@ -6,7 +6,7 @@
 
 1. **Add** newly confirmed matches for tracked **clubs** and tracked **national teams** that are not yet in the DB (domestic league + UEFA club cups + national-team competitions per rules below).
 2. **Correct** kickoff date/time when the source differs.
-3. **Write** match results for **finished** games that still lack a score.
+3. **Write** match results for **finished** games that still lack a score, including **yesterday** (`Europe/Istanbul`) when the title is still unscored.
 
 **Must follow:** [`docs/event-data-rules.md`](./event-data-rules.md) for every SQL change.
 
@@ -16,13 +16,19 @@
 
 ### Tracked clubs
 
-When searching club sources, only look up fixtures for these **12 clubs**. Do not scan full competition calendars beyond what is needed for these teams.
+When searching club sources, only look up fixtures for these clubs. Do not scan full competition calendars beyond what is needed for these teams.
 
-| League          | Clubs                                                                              |
-| --------------- | ---------------------------------------------------------------------------------- |
-| **Süper Lig**   | Galatasaray, Fenerbahçe, Beşiktaş, Trabzonspor                                     |
-| **Premier Lig** | Arsenal, Liverpool, Manchester City, Manchester United, Tottenham Hotspur, Chelsea |
-| **La Liga**     | Barcelona, Real Madrid                                                             |
+| League          | Clubs                                                                              | What to add                                          |
+| --------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| **Süper Lig**   | Galatasaray, Fenerbahçe, Beşiktaş, Trabzonspor                                     | League + UEFA                                        |
+| **Premier Lig** | Arsenal, Liverpool, Manchester City, Manchester United, Tottenham Hotspur, Chelsea | League + UCL                                         |
+| **La Liga**     | Barcelona, Real Madrid                                                             | League + UCL                                         |
+| **UCL-only**    | Bayern Münih, Paris Saint-Germain, Inter, Juventus, Milan, Napoli, Roma            | **UCL only** — no domestic league, no UEL/UECL       |
+| **Serie A**     | Inter, Juventus, Milan, Napoli, Roma                                               | League match **only if both sides** are in this five |
+
+Title spelling: `Bayern Münih`, `Paris Saint-Germain`, `Inter`, `Juventus`, `Milan`, `Napoli`, `Roma`.
+
+The Italian five are in **both** rows. Scan every Şampiyonlar Ligi match of those seven UCL-only clubs. Scan a Serie A match only when the opponent is also in the five. If one of them is in Avrupa Ligi or Konferans Ligi instead of Şampiyonlar Ligi, skip that competition.
 
 ### Tracked national teams
 
@@ -48,30 +54,45 @@ Turkish title names: `Türkiye`, `Fransa`, `İspanya`, `İngiltere`, `Portekiz`,
 
 ### Categories (DB slugs)
 
-| Slug               | Used for                                                                                |
-| ------------------ | --------------------------------------------------------------------------------------- |
-| `galatasaray`      | Galatasaray — Süper Lig; UEFA when Galatasaray plays                                    |
-| `fenerbahce`       | Fenerbahçe — Süper Lig; UEFA when Fenerbahçe plays                                      |
-| `besiktas`         | Beşiktaş — Süper Lig; UEFA when Beşiktaş plays                                          |
-| `trabzonspor`      | Trabzonspor — Süper Lig; UEFA when Trabzonspor plays                                    |
-| `premier-lig`      | Premier Lig matches of the six English clubs above                                      |
-| `la-liga`          | La Liga matches of Barcelona and Real Madrid                                            |
-| `sampiyonlar-ligi` | Şampiyonlar Ligi matches where **at least one side is a tracked club** (see rule below) |
-| `milli-takimlar`   | Millî takım maçları where **≥1 tracked national team** plays (Uluslar Ligi, DK, …)      |
+| Slug               | Used for                                                                                           |
+| ------------------ | -------------------------------------------------------------------------------------------------- |
+| `galatasaray`      | Galatasaray — Süper Lig; UEFA when Galatasaray plays                                               |
+| `fenerbahce`       | Fenerbahçe — Süper Lig; UEFA when Fenerbahçe plays                                                 |
+| `besiktas`         | Beşiktaş — Süper Lig; UEFA when Beşiktaş plays                                                     |
+| `trabzonspor`      | Trabzonspor — Süper Lig; UEFA when Trabzonspor plays                                               |
+| `premier-lig`      | Premier Lig matches of the six English clubs above                                                 |
+| `la-liga`          | La Liga matches of Barcelona and Real Madrid                                                       |
+| `serie-a`          | Serie A matches where **both** sides are Inter, Juventus, Milan, Napoli, or Roma                   |
+| `sampiyonlar-ligi` | Şampiyonlar Ligi matches where **at least one side is a tracked club** (domestic 12 or UCL-only 7) |
+| `milli-takimlar`   | Millî takım maçları where **≥1 tracked national team** plays (Uluslar Ligi, DK, …)                 |
 
 ### Şampiyonlar Ligi — hangi maçlar eklenir?
 
-During the 2-week fixture discovery, add UCL matches **only if at least one club is on the tracked list** (same 12 as above). Link **tracked club slug + `sampiyonlar-ligi`** per event-data-rules §2.3.
+During the 2-week fixture discovery, add UCL matches **only if at least one club is tracked** (the domestic 12 or the UCL-only 7). Domestic clubs link **club or league slug + `sampiyonlar-ligi`**. UCL-only clubs link **`sampiyonlar-ligi` only** — do not add their domestic league matches.
 
 | Example                | Add?    | Why                                  |
 | ---------------------- | ------- | ------------------------------------ |
 | Barcelona - Lyon       | **Yes** | Barcelona is tracked                 |
 | Lyon - Porto           | **No**  | Neither side is tracked              |
 | Galatasaray - PSG      | **Yes** | Galatasaray is tracked               |
+| Viking - Bayern Münih  | **Yes** | Bayern Münih is UCL-only             |
 | Liverpool - Fenerbahçe | **Yes** | Liverpool and Fenerbahçe are tracked |
 | Sporting - Stuttgart   | **No**  | Neither side is tracked              |
 
 Do **not** import the full UCL matchday or scan every fixture on UEFA.com — only fixtures that involve a tracked club in the window.
+
+### Serie A — hangi maçlar eklenir?
+
+Add a Serie A match **only when both sides** are Inter, Juventus, Milan, Napoli, or Roma. Link **`serie-a` only**. Description `NULL`.
+
+| Example              | Add?                | Why                               |
+| -------------------- | ------------------- | --------------------------------- |
+| Napoli - Roma        | **Yes**             | Both sides are in the five        |
+| Milan - Inter        | **Yes**             | Both sides are in the five        |
+| Juventus - Lecce     | **No**              | Lecce is outside the five         |
+| Inter - Napoli (UCL) | **No** as `serie-a` | UCL stays `sampiyonlar-ligi` only |
+
+Do **not** import the rest of Serie A.
 
 ### Avrupa Ligi / Konferans Ligi — hangi maçlar eklenir?
 
@@ -83,10 +104,11 @@ During the 2-week fixture discovery, also scan **UEFA Avrupa Ligi** and **UEFA K
 | Trabzonspor - Hearts (UECL)       | **Yes** | Trabzonspor is one of the four                                           |
 | Crystal Palace - Hoffenheim (UEL) | **No**  | No Turkish big-four club                                                 |
 | Arsenal - Athletic (UEL)          | **No**  | English tracked clubs: UEL/UECL **not** in add scope (UCL only for them) |
+| Juventus - Rennes (UEL)           | **No**  | UCL-only clubs: UEL/UECL **not** in add scope                            |
 
 Link **club slug only** (no `avrupa-ligi` / konferans category yet) per event-data-rules §2.3. Pre-match description: `'Avrupa Ligi …'` / `'Konferans Ligi …'` round text (same style as existing eleme / lig aşaması events).
 
-Do **not** import full UEL/UECL matchdays — only fixtures of GS / FB / BJK / TS in the window.
+Do **not** import full UEL/UECL matchdays — only fixtures of GS / FB / BJK / TS in the window. Do **not** add Avrupa Ligi or Konferans Ligi fixtures for the UCL-only seven (Bayern Münih, Paris Saint-Germain, Inter, Juventus, Milan, Napoli, Roma).
 
 There is **no** separate Süper Lig category. Süper Lig fixtures link the relevant club slug(s); derbies link **both** clubs.
 
@@ -106,27 +128,31 @@ Do **not** import full Nations League matchdays — only fixtures with ≥1 trac
 
 ### What to add vs what to sync only
 
-| Competition       | Add new fixtures? | Notes                                                                           |
-| ----------------- | ----------------- | ------------------------------------------------------------------------------- |
-| Süper Lig         | **Yes**           | Only matches of the four Turkish clubs                                          |
-| Premier Lig       | **Yes**           | Only matches of the six English clubs                                           |
-| La Liga           | **Yes**           | Only matches of Barcelona and Real Madrid                                       |
-| Şampiyonlar Ligi  | **Yes**           | Only when **≥1 tracked club** plays; never add other pairings (e.g. Lyon–Porto) |
-| Avrupa Ligi       | **Yes**           | **Only** GS / FB / BJK / TS (not PL / La Liga clubs)                            |
-| Konferans Ligi    | **Yes**           | **Only** GS / FB / BJK / TS                                                     |
-| Uluslar Ligi / NT | **Yes**           | ≥1 tracked national team; **hazırlık yalnızca Türkiye**                         |
-| Domestic cup      | **No** (add step) | Existing events: kickoff + result sync only                                     |
+| Competition       | Add new fixtures? | Notes                                                                        |
+| ----------------- | ----------------- | ---------------------------------------------------------------------------- |
+| Süper Lig         | **Yes**           | Only matches of the four Turkish clubs                                       |
+| Premier Lig       | **Yes**           | Only matches of the six English clubs                                        |
+| La Liga           | **Yes**           | Only matches of Barcelona and Real Madrid                                    |
+| Serie A           | **Yes**           | Only when **both** sides are Inter, Juventus, Milan, Napoli, or Roma         |
+| Şampiyonlar Ligi  | **Yes**           | Domestic 12 **or** UCL-only 7; UCL-only clubs have no domestic league import |
+| Avrupa Ligi       | **Yes**           | **Only** GS / FB / BJK / TS (not PL / La Liga clubs)                         |
+| Konferans Ligi    | **Yes**           | **Only** GS / FB / BJK / TS                                                  |
+| Uluslar Ligi / NT | **Yes**           | ≥1 tracked national team; **hazırlık yalnızca Türkiye**                      |
+| Domestic cup      | **No** (add step) | Existing events: kickoff + result sync only                                  |
 
 ### Time window
 
 ```text
-window_start = calendar date of the invocation (Europe/Istanbul)
-window_end   = window_start + 14 days (inclusive)
+window_start    = calendar date of the invocation (Europe/Istanbul)
+window_end      = window_start + 14 days (inclusive)
+result_lookback = window_start - 1 day
 ```
 
-When searching external sources for **new** fixtures, stay inside this window only — do not scan the rest of the season.
+When searching external sources for **new** fixtures, stay inside `window_start` → `window_end` only — do not scan the rest of the season, and do not add fixtures from `result_lookback`.
 
-For kickoff/result sync, process all in-scope events whose `start_date` falls in the window (including events already in DB from earlier imports).
+For kickoff sync, process in-scope events whose `start_date` falls in the window (including events already in DB from earlier imports).
+
+For **result** sync, also include in-scope events whose kickoff falls on `result_lookback` when the title is still unscored. That day is result-only: confirm FT, write a score if it is missing, and leave kickoff discovery there alone. Do not rescan the season.
 
 ---
 
@@ -176,16 +202,17 @@ Execute steps in order. Treat **fixture add**, kickoff sync, and result sync as 
 
 For each tracked club, check official or reliable sources:
 
-| Competition                  | Sources (examples)                                                     |
-| ---------------------------- | ---------------------------------------------------------------------- |
-| Süper Lig                    | TFF, Skorjet                                                           |
-| Premier Lig                  | premierleague.com, club sites                                          |
-| La Liga                      | laliga.com, fcbarcelona.com, realmadrid.com                            |
-| Şampiyonlar Ligi             | uefa.com, club sites — **only fixtures where that tracked club plays** |
-| Avrupa Ligi / Konferans Ligi | uefa.com, club sites, AA/TRT — **only GS / FB / BJK / TS**             |
-| Uluslar Ligi / millî maçlar  | uefa.com, TFF, federation sites — **only tracked national teams**      |
+| Competition                  | Sources (examples)                                                               |
+| ---------------------------- | -------------------------------------------------------------------------------- |
+| Süper Lig                    | TFF, Skorjet                                                                     |
+| Premier Lig                  | premierleague.com, club sites                                                    |
+| La Liga                      | laliga.com, fcbarcelona.com, realmadrid.com                                      |
+| Şampiyonlar Ligi             | uefa.com, club sites — **only fixtures where a domestic or UCL-only club plays** |
+| Serie A                      | legaseriea.it — **only both-sides matches of the Italian five**                  |
+| Avrupa Ligi / Konferans Ligi | uefa.com, club sites, AA/TRT — **only GS / FB / BJK / TS**                       |
+| Uluslar Ligi / millî maçlar  | uefa.com, TFF, federation sites — **only tracked national teams**                |
 
-Build a list of `Home - Away` fixtures with confirmed kickoff (`Europe/Istanbul`). For UCL / UEL / UECL / national teams, apply the inclusion rules above before adding to the list.
+Build a list of `Home - Away` fixtures with confirmed kickoff (`Europe/Istanbul`). For UCL, Serie A, UEL / UECL, and national teams, apply the inclusion rules above before adding to the list. `serie-a` is an in-scope slug together with the club, league, `sampiyonlar-ligi`, and `milli-takimlar` slugs.
 
 Compare against DB (`title` + `start_date`, or `title` alone if kickoff was placeholder).
 
@@ -199,7 +226,12 @@ Derbies already in DB under one title → do not duplicate; link missing club sl
 
 ### Step 2 — Load DB window
 
-Query published timed events in the window linked to in-scope slugs. Prefer joining through `event_categories` → `categories`.
+Query published timed events linked to in-scope slugs (`galatasaray`, `fenerbahce`, `besiktas`, `trabzonspor`, `premier-lig`, `la-liga`, `serie-a`, `sampiyonlar-ligi`, `milli-takimlar`). Prefer joining through `event_categories` → `categories`.
+
+Load:
+
+- every in-scope event whose `start_date` falls in the window
+- yesterday’s in-scope events (`result_lookback`) whose title is still unscored
 
 Collect per event:
 
@@ -209,7 +241,9 @@ Collect per event:
 
 ### Step 3 — Verify each event against a source
 
-For each event in the window (existing + newly planned):
+For each event in the window (existing + newly planned), and for each unscored in-scope event on `result_lookback`:
+
+Yesterday is **result-only**. Do not add fixtures from that day. Do not change kickoff unless a postponed match already in the DB has a new confirmed time.
 
 | Check                               | If source differs / match finished                                                                                            |
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
@@ -231,9 +265,26 @@ For each planned change, add an idempotent migration under `supabase/migrations/
 | Kickoff only            | `YYYYMMDDHHMMSS_update_<slug>_kickoff.sql` (or `fix_` for tiny corrections) |
 | Result                  | `YYYYMMDDHHMMSS_update_<slug>_result.sql`                                   |
 
-Apply remotely with `apply_migration` when that is the project’s normal path. Do not invent SQL that does not match [`event-data-rules.md`](./event-data-rules.md).
+Migrations are `INSERT` and `UPDATE` only. Do not write `DELETE`, `TRUNCATE`, or `DROP`.
 
-If nothing changed → no migration files.
+Do not invent SQL that does not match [`event-data-rules.md`](./event-data-rules.md).
+
+If nothing changed → no migration files. Do not commit and do not call `apply_migration`.
+
+### Step 4b — Branch, merge, then apply
+
+Use one long-lived branch, `cursor-automations`. Do not open a new branch per run.
+
+1. Fetch `origin`.
+2. If `cursor-automations` does not exist, create it from `origin/main`.
+3. If it exists, check it out and merge `origin/main` into it before editing.
+4. Commit the migration files and the run log on `cursor-automations` and push that branch.
+5. If a pull request from `cursor-automations` into `main` is already open, push to it. Do not open a second pull request. Then merge that pull request into `main`.
+6. If no pull request is open and this run has commits, open one pull request into `main`, then merge it.
+7. Apply those migrations to the remote **Takvim** Supabase project with `apply_migration` only after the commits are on `main`.
+8. If Supabase is not connected, push the branch and stop. Do not claim the live calendar changed.
+
+A later run the same day uses this same branch: merge `main` in first, then commit again. The branch stays; it is not replaced by a new one.
 
 ### Step 5 — Write the run log
 
@@ -252,7 +303,11 @@ Use the invocation date in `Europe/Istanbul` as `YYYY-MM-DD`. If a file for that
 
 - Invoked: YYYY-MM-DD HH:MM (`Europe/Istanbul`)
 - Window: YYYY-MM-DD → YYYY-MM-DD (+14d)
+- Result lookback: YYYY-MM-DD (yesterday, unscored only)
+- Branch: `cursor-automations`
 - Tracked clubs: Galatasaray, Fenerbahçe, Beşiktaş, Trabzonspor; Arsenal, Liverpool, Manchester City, Manchester United, Tottenham, Chelsea; Barcelona, Real Madrid
+- UCL-only: Bayern Münih, Paris Saint-Germain, Inter, Juventus, Milan, Napoli, Roma
+- Serie A (both sides only): Inter, Juventus, Milan, Napoli, Roma
 - Tracked national teams: İspanya, Arjantin, Fransa, İngiltere, Brezilya, Portekiz, Almanya, Türkiye
 
 ## Sources
@@ -261,12 +316,15 @@ Use the invocation date in `Europe/Istanbul` as `YYYY-MM-DD`. If a file for that
 
 ## Fixture discovery (league + UEFA + NT, 2-week window)
 
-| Event               | Competition | Kickoff (source) | In DB?      | Action                   |
-| ------------------- | ----------- | ---------------- | ----------- | ------------------------ |
-| Barcelona - Lyon    | UCL         | 2026-09-10 22:00 | no          | add fixture              |
-| Beşiktaş - Marsilya | UEL         | 2026-09-17 22:00 | no          | add fixture              |
-| Lyon - Porto        | UCL         | —                | —           | skipped: no tracked club |
-| Home - Away         | Süper Lig   | 2026-09-06 20:00 | yes (12:00) | update kickoff           |
+| Event                 | Competition | Kickoff (source) | In DB?      | Action                   |
+| --------------------- | ----------- | ---------------- | ----------- | ------------------------ |
+| Barcelona - Lyon      | UCL         | 2026-09-10 22:00 | no          | add fixture              |
+| Viking - Bayern Münih | UCL         | 2026-10-13 22:00 | no          | add fixture              |
+| Napoli - Roma         | Serie A     | 2026-10-24 19:00 | no          | add fixture              |
+| Juventus - Lecce      | Serie A     | —                | —           | skipped: not both sides  |
+| Beşiktaş - Marsilya   | UEL         | 2026-09-17 22:00 | no          | add fixture              |
+| Lyon - Porto          | UCL         | —                | —           | skipped: no tracked club |
+| Home - Away           | Süper Lig   | 2026-09-06 20:00 | yes (12:00) | update kickoff           |
 
 ## Events checked
 
@@ -319,9 +377,12 @@ Never invent scorers. If FT score is known but scorer list is not verified → u
 ## Out of scope
 
 - League fixtures for clubs **not** in the tracked list above
-- Şampiyonlar Ligi pairings that do **not** involve a tracked club
+- Şampiyonlar Ligi pairings that do **not** involve a tracked club (domestic 12 or UCL-only 7)
+- Domestic league matches of UCL-only clubs (Bayern, PSG, and the Italian five outside a both-sides Serie A pairing)
+- Serie A matches where either side is outside Inter, Juventus, Milan, Napoli, Roma
 - Avrupa Ligi / Konferans Ligi pairings that do **not** involve GS / FB / BJK / TS
 - Avrupa Ligi / Konferans Ligi for PL / La Liga tracked clubs (those clubs: UCL + domestic only)
+- Avrupa Ligi / Konferans Ligi for UCL-only clubs (Bayern Münih, Paris Saint-Germain, Inter, Juventus, Milan, Napoli, Roma)
 - Millî takım maçları where **neither** side is a tracked national team
 - **Hazırlık** maçları where **Türkiye does not play** (other tracked NTs’ friendlies are out of scope)
 - Domestic cup **new** fixture imports (existing events: kickoff + result sync only)
@@ -335,14 +396,15 @@ Never invent scorers. If FT score is known but scorer list is not verified → u
 ## Agent checklist
 
 1. Confirm this file was explicitly invoked
-2. Compute Istanbul window: today → today+14d
-3. For each **tracked club**, discover **league + UEFA** fixtures in the window (UCL: any tracked club; UEL/UECL: **only** GS/FB/BJK/TS); compare to DB; plan `add_` migrations for missing confirmed fixtures
-4. For each **tracked national team**, discover Uluslar Ligi / turnuva fixtures (≥1 tracked side + confirmed kickoff); hazırlık **yalnızca Türkiye**; plan `add_` with `milli-takimlar`
-5. Load all in-scope events in the window from DB
-6. If the user asked for **today’s matches**, filter result work to kickoffs on today’s date
-7. Verify each event against a reliable source (cite URLs)
-8. For every result candidate: confirm **FT** on source(s) — never from live/HT/partial data; reject if minute clock or `Live`/`Second Half` is visible
-9. Plan add + kickoff + **FT-only** result updates (no mid-match score writes)
-10. Write/apply migrations when needed
+2. Compute Istanbul window: today → today+14d, plus yesterday for unscored results only
+3. Check out `cursor-automations` (create from `origin/main` if missing; otherwise merge `origin/main` in first)
+4. For each **tracked club**, discover fixtures in the window (domestic league for the 12; UCL for the 12 and the UCL-only 7; Serie A only when both sides are in the Italian five; UEL/UECL **only** GS/FB/BJK/TS); compare to DB; plan `add_` migrations for missing confirmed fixtures
+5. For each **tracked national team**, discover Uluslar Ligi / turnuva fixtures (≥1 tracked side + confirmed kickoff); hazırlık **yalnızca Türkiye**; plan `add_` with `milli-takimlar`
+6. Load in-scope events in the window, plus yesterday’s unscored in-scope events
+7. If the user asked for **today’s matches**, filter result work to kickoffs on today’s date (yesterday’s result lookback still applies on a full run)
+8. Verify each event against a reliable source (cite URLs)
+9. For every result candidate, including yesterday: confirm **FT** on source(s) — never from live/HT/partial data; reject if minute clock or `Live`/`Second Half` is visible
+10. Plan add + kickoff + **FT-only** result updates (no mid-match score writes). SQL is `INSERT` / `UPDATE` only
 11. Write `docs/logs/YYYY-MM-DD-haftalik-kontrol.md`
-12. Summarize to the user: added / changed / skipped / unchanged counts
+12. Commit and push on `cursor-automations`, reuse the open pull request or open one, merge it into `main`, then `apply_migration` on the **Takvim** project
+13. Summarize to the user: added / changed / skipped / unchanged counts, and whether the migrations were applied

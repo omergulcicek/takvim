@@ -57,6 +57,7 @@ Do **not** put the score in the title before kickoff.
 | Süper Lig                   | **`NULL`** — omit                                                                 |
 | La Liga                     | **`NULL`** — omit                                                                 |
 | Premier Lig                 | **`NULL`** — omit                                                                 |
+| Serie A                     | **`NULL`** — omit                                                                 |
 | Europa League qualifying    | `'Avrupa Ligi … eleme turu ilk maç'` / `'… rövanş maçı'`                          |
 | Champions League qualifying | `'Şampiyonlar Ligi … eleme turu ilk maç'` / `'… rövanş maçı'`                     |
 | UEFA Nations League         | `'Uluslar Ligi lig aşaması — N. hafta'`                                           |
@@ -64,14 +65,15 @@ Do **not** put the score in the title before kickoff.
 
 ### 2.3 Category links
 
-| Match type       | `event_categories` slugs                                                                                                   |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Süper Lig        | Club slug(s): `galatasaray` \| `fenerbahce` \| `besiktas` \| `trabzonspor` — derbies link **both** clubs to the same event |
-| La Liga          | `la-liga`                                                                                                                  |
-| Premier Lig      | `premier-lig`                                                                                                              |
-| Champions League | Club **+** `sampiyonlar-ligi`                                                                                              |
-| Europa League    | Club only for now (no `avrupa-ligi` category)                                                                              |
-| Millî Takımlar   | `milli-takimlar` (Dünya Kupası, Uluslar Ligi, Copa América vb.)                                                            |
+| Match type       | `event_categories` slugs                                                                                                                                 |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Süper Lig        | Club slug(s): `galatasaray` \| `fenerbahce` \| `besiktas` \| `trabzonspor` — derbies link **both** clubs to the same event                               |
+| La Liga          | `la-liga`                                                                                                                                                |
+| Premier Lig      | `premier-lig`                                                                                                                                            |
+| Serie A          | `serie-a` — only when **both** sides are Inter, Juventus, Milan, Napoli, or Roma                                                                         |
+| Champions League | Club **+** `sampiyonlar-ligi`. UCL-only clubs (Bayern Münih, Paris Saint-Germain, Inter, Juventus, Milan, Napoli, Roma) link **`sampiyonlar-ligi` only** |
+| Europa League    | Club only for now (no `avrupa-ligi` category)                                                                                                            |
+| Millî Takımlar   | `milli-takimlar` (Dünya Kupası, Uluslar Ligi, Copa América vb.)                                                                                          |
 
 > There is **no** separate Süper Lig category.
 
@@ -115,8 +117,8 @@ ON CONFLICT DO NOTHING;
 2. Kickoff known? If not → `12:00` placeholder
 3. `Europe/Istanbul` + `+ 2 hours`; if end would be `00:00`, use **23:55** same kickoff day
 4. Süper Lig → `description NULL`, club only
-5. La Liga / Premier Lig → `description NULL`, competition slug only
-6. UCL → round description + club + `sampiyonlar-ligi`
+5. La Liga / Premier Lig / Serie A → `description NULL`, competition slug only
+6. UCL → round description + club + `sampiyonlar-ligi` (UCL-only clubs: `sampiyonlar-ligi` only)
 7. `NOT EXISTS` + `ON CONFLICT DO NOTHING`
 8. `is_all_day = false`, `recurrence = 'none'`, `status = 'published'`
 

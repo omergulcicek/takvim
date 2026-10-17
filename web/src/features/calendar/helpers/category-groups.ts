@@ -21,6 +21,7 @@ export const CATEGORY_GROUPS: readonly CategoryGroupDefinition[] = [
       "sampiyonlar-ligi",
       "premier-lig",
       "la-liga",
+      "serie-a",
     ],
   },
   {

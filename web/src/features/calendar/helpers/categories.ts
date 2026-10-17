@@ -122,6 +122,7 @@ export const CATEGORY_COLOR_MAP: Record<string, CategoryColorKey> = {
   "sampiyonlar-ligi": "green400",
   "premier-lig": "green400",
   "la-liga": "green400",
+  "serie-a": "green400",
   besiktas: "green400",
   fenerbahce: "green400",
   galatasaray: "green400",
