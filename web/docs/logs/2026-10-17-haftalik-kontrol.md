@@ -21,31 +21,31 @@
 
 ## Fixture discovery (league + UEFA + NT, 2-week window)
 
-| Event                        | Competition            | Kickoff (source, TR) | In DB?            | Action                          |
-| ---------------------------- | ---------------------- | -------------------- | ----------------- | ------------------------------- |
-| 17–30 Eki takip lig / UCL / UEL / UECL | —            | kaynakla aynı        | yes               | kickoff değişmedi               |
-| Chelsea - Manchester United  | Premier Lig            | 2026-10-31 15:30     | no                | add fixture                     |
-| Manchester City - Brighton   | Premier Lig            | 2026-10-31 18:00     | no                | add fixture                     |
-| Tottenham - Crystal Palace   | Premier Lig            | 2026-10-31 20:30     | no                | add fixture                     |
-| Barcelona - Alavés           | La Liga                | 2026-10-31 23:00     | no                | add fixture                     |
-| Fenerbahçe - Göztepe         | Süper Lig              | 2026-10-31 19:00     | yes (01.11 12:00) | update kickoff                  |
-| Fleetwood Town - Arsenal     | Lig Kupası             | 2026-10-27 23:00     | no                | skipped: domestic cup           |
-| Manchester City - Brighton   | Lig Kupası             | 2026-10-28 22:30     | no                | skipped: domestic cup           |
-| Liverpool - Chelsea          | Lig Kupası             | 2026-10-28 23:00     | no                | skipped: domestic cup           |
-| Liverpool - Arsenal          | Premier Lig            | 2026-11-01 19:30     | no                | skipped: outside window         |
-| Racing Santander - Real Madrid | La Liga              | 2026-11-01 18:15     | no                | skipped: outside window         |
-| Trabzonspor - Gaziantep FK   | Süper Lig              | 2026-11-01 16:00     | yes (01.11 12:00) | skipped: kickoff outside window |
-| Kasımpaşa - Beşiktaş         | Süper Lig              | 2026-11-01 19:00     | yes (01.11 12:00) | skipped: kickoff outside window |
-| Millî takım                  | Uluslar Ligi / hazırlık | —                   | —                 | pencerede maç yok; sonraki 12–17 Kasım |
+| Event                                  | Competition             | Kickoff (source, TR) | In DB?            | Action                                 |
+| -------------------------------------- | ----------------------- | -------------------- | ----------------- | -------------------------------------- |
+| 17–30 Eki takip lig / UCL / UEL / UECL | —                       | kaynakla aynı        | yes               | kickoff değişmedi                      |
+| Chelsea - Manchester United            | Premier Lig             | 2026-10-31 15:30     | no                | add fixture                            |
+| Manchester City - Brighton             | Premier Lig             | 2026-10-31 18:00     | no                | add fixture                            |
+| Tottenham - Crystal Palace             | Premier Lig             | 2026-10-31 20:30     | no                | add fixture                            |
+| Barcelona - Alavés                     | La Liga                 | 2026-10-31 23:00     | no                | add fixture                            |
+| Fenerbahçe - Göztepe                   | Süper Lig               | 2026-10-31 19:00     | yes (01.11 12:00) | update kickoff                         |
+| Fleetwood Town - Arsenal               | Lig Kupası              | 2026-10-27 23:00     | no                | skipped: domestic cup                  |
+| Manchester City - Brighton             | Lig Kupası              | 2026-10-28 22:30     | no                | skipped: domestic cup                  |
+| Liverpool - Chelsea                    | Lig Kupası              | 2026-10-28 23:00     | no                | skipped: domestic cup                  |
+| Liverpool - Arsenal                    | Premier Lig             | 2026-11-01 19:30     | no                | skipped: outside window                |
+| Racing Santander - Real Madrid         | La Liga                 | 2026-11-01 18:15     | no                | skipped: outside window                |
+| Trabzonspor - Gaziantep FK             | Süper Lig               | 2026-11-01 16:00     | yes (01.11 12:00) | skipped: kickoff outside window        |
+| Kasımpaşa - Beşiktaş                   | Süper Lig               | 2026-11-01 19:00     | yes (01.11 12:00) | skipped: kickoff outside window        |
+| Millî takım                            | Uluslar Ligi / hazırlık | —                    | —                 | pencerede maç yok; sonraki 12–17 Kasım |
 
 ## Events checked
 
-| Event                       | Kickoff (DB)     | Kickoff (source) | Status    | Action         |
-| --------------------------- | ---------------- | ---------------- | --------- | -------------- |
-| 16 Eki, kapsam içi kayıt yok | —               | skor tablosu boş | —         | none           |
-| Real Betis - Barcelona      | 2026-10-17 19:30 | 2026-10-17 19:30 | scheduled | none           |
-| Fenerbahçe - Göztepe        | 2026-11-01 12:00 | 2026-10-31 19:00 | scheduled | update kickoff |
-| 17–30 Eki, 30 maç           | DB saati         | kaynakla aynı    | scheduled | none           |
+| Event                        | Kickoff (DB)     | Kickoff (source) | Status    | Action         |
+| ---------------------------- | ---------------- | ---------------- | --------- | -------------- |
+| 16 Eki, kapsam içi kayıt yok | —                | skor tablosu boş | —         | none           |
+| Real Betis - Barcelona       | 2026-10-17 19:30 | 2026-10-17 19:30 | scheduled | none           |
+| Fenerbahçe - Göztepe         | 2026-11-01 12:00 | 2026-10-31 19:00 | scheduled | update kickoff |
+| 17–30 Eki, 30 maç            | DB saati         | kaynakla aynı    | scheduled | none           |
 
 ## Migrations
 

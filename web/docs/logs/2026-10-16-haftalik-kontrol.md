@@ -22,27 +22,27 @@
 
 ## Fixture discovery (league + UEFA + NT, 2-week window)
 
-| Event                                  | Competition             | Kickoff (source, TR) | In DB?           | Action                                 |
-| -------------------------------------- | ----------------------- | -------------------- | ---------------- | -------------------------------------- |
-| 16–26 Eki takip lig / UCL / UEL / UECL | —                       | kaynakla aynı        | yes              | kickoff değişmedi                      |
+| Event                                  | Competition             | Kickoff (source, TR) | In DB?            | Action                                 |
+| -------------------------------------- | ----------------------- | -------------------- | ----------------- | -------------------------------------- |
+| 16–26 Eki takip lig / UCL / UEL / UECL | —                       | kaynakla aynı        | yes               | kickoff değişmedi                      |
 | Konyaspor - Galatasaray                | Süper Lig               | 2026-10-30 20:00     | yes (01.11 12:00) | update kickoff                         |
-| 27–29 Eki                              | lig / UCL / UEL / UECL  | —                    | —                | maç yok                                |
-| Fleetwood Town - Arsenal               | Lig Kupası              | 2026-10-27 23:00     | no               | skipped: domestic cup                  |
-| Manchester City - Brighton             | Lig Kupası              | 2026-10-28 22:30     | no               | skipped: domestic cup                  |
-| Liverpool - Chelsea                    | Lig Kupası              | 2026-10-28 23:00     | no               | skipped: domestic cup                  |
+| 27–29 Eki                              | lig / UCL / UEL / UECL  | —                    | —                 | maç yok                                |
+| Fleetwood Town - Arsenal               | Lig Kupası              | 2026-10-27 23:00     | no                | skipped: domestic cup                  |
+| Manchester City - Brighton             | Lig Kupası              | 2026-10-28 22:30     | no                | skipped: domestic cup                  |
+| Liverpool - Chelsea                    | Lig Kupası              | 2026-10-28 23:00     | no                | skipped: domestic cup                  |
 | Fenerbahçe - Göztepe                   | Süper Lig               | 2026-10-31 19:00     | yes (01.11 12:00) | skipped: kickoff outside window        |
 | Trabzonspor - Gaziantep FK             | Süper Lig               | 2026-11-01 16:00     | yes (01.11 12:00) | skipped: kickoff outside window        |
 | Kasımpaşa - Beşiktaş                   | Süper Lig               | 2026-11-01 19:00     | yes (01.11 12:00) | skipped: kickoff outside window        |
-| Millî takım                            | Uluslar Ligi / hazırlık | —                    | —                | pencerede maç yok; sonraki 12–17 Kasım |
+| Millî takım                            | Uluslar Ligi / hazırlık | —                    | —                 | pencerede maç yok; sonraki 12–17 Kasım |
 
 ## Events checked
 
-| Event                    | Kickoff (DB)     | Kickoff (source) | Status       | Action         |
-| ------------------------ | ---------------- | ---------------- | ------------ | -------------- |
+| Event                     | Kickoff (DB)     | Kickoff (source) | Status       | Action         |
+| ------------------------- | ---------------- | ---------------- | ------------ | -------------- |
 | KuPS Kuopio - Trabzonspor | 2026-10-15 19:45 | 2026-10-15 19:45 | finished 2-4 | update result  |
-| Hoffenheim - Beşiktaş    | 2026-10-15 22:00 | 2026-10-15 22:00 | finished 2-3 | update result  |
-| Konyaspor - Galatasaray  | 2026-11-01 12:00 | 2026-10-30 20:00 | scheduled    | update kickoff |
-| 16–26 Eki, 30 maç        | DB saati         | kaynakla aynı    | scheduled    | none           |
+| Hoffenheim - Beşiktaş     | 2026-10-15 22:00 | 2026-10-15 22:00 | finished 2-3 | update result  |
+| Konyaspor - Galatasaray   | 2026-11-01 12:00 | 2026-10-30 20:00 | scheduled    | update kickoff |
+| 16–26 Eki, 30 maç         | DB saati         | kaynakla aynı    | scheduled    | none           |
 
 ## Migrations
 
