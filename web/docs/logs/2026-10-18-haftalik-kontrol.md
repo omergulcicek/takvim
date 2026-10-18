@@ -1,24 +1,33 @@
 # Weekly fixture sync — 2026-10-18
 
 - Pencere: 2026-10-18 → 2026-11-01 (+14d)
-- Sonuç kontrolü: 2026-10-17 (dün)
+- Sonuç kontrolü: 2026-10-15 → 2026-10-17
 
 ## Kaynaklar
 
-- ESPN scoreboard API — erişilemedi (proxy 403 / ENOTFOUND)
-- Web araması (Gençlerbirliği - Galatasaray 17 Eki 2026) — sonuç bulunamadı; yalnızca eski sezon sonuçları döndü
+- ESPN scoreboard API (skor, gol dakikaları, fikstür saatleri)
+- FotMob (skor, fikstür saatleri)
+- BBC Sport (skor, yalnızca 17 Eki sonuçları)
+
+Erişilemeyen kaynak: yok. Web araması 17 Eki 2026 maçları için sonuç döndürmedi, kullanılmadı.
 
 ## Migrations
 
-Yok.
+- `20261018020000_update_everton_chelsea_result.sql` — Everton 0 - 2 Chelsea sonucu
+- `20261018020001_update_genclerbirligi_galatasaray_result.sql` — Gençlerbirliği 0 - 1 Galatasaray sonucu
+- `20261018020002_update_brentford_liverpool_result.sql` — Brentford 1 - 2 Liverpool sonucu
+- `20261018020003_update_manchester_city_ipswich_result.sql` — Manchester City 3 - 2 Ipswich sonucu
+- `20261018020004_update_fenerbahce_alanyaspor_result.sql` — Fenerbahçe 3 - 0 Alanyaspor sonucu
+- `20261018020005_update_real_betis_barcelona_result.sql` — Real Betis 2 - 5 Barcelona sonucu
+- `20261018020006_update_nov1_kickoffs.sql` — Kasımpaşa - Beşiktaş 19:00 ve Trabzonspor - Gaziantep FK 16:00 saatleri
+- `20261018020007_add_nov1_league_fixtures.sql` — Liverpool - Arsenal, Racing Santander - Real Madrid, Juventus - Napoli eklendi
 
 ## Skipped
 
-- 17 Eki sonuçları (Everton - Chelsea, Gençlerbirliği - Galatasaray, Brentford - Liverpool, Manchester City - Ipswich, Fenerbahçe - Alanyaspor, Real Betis - Barcelona) — en az iki güvenilir kaynak doğrulanamadı; skor yazılmadı
-- 1 Kasım fikstür saatleri (Kasımpaşa - Beşiktaş, Trabzonspor - Gaziantep FK) — yeni kaynak doğrulaması yok; 12:00 yer tutucusu duruyor
-- Pencerenin yeni maçları — kaynağa erişilemediği için taranamadı
+- 15-16 Eki sonuçları zaten Takvim'de skorlu; değişiklik yok
+- Gol dakikaları tek kaynaktan (ESPN) alındı; skorlar üç kaynakta (ESPN, FotMob, BBC) aynı
 
 ## Notes
 
-- Eklenen **0**, güncellenen **0**, atlanan **9**, değişmeyen: DB'deki penceredeki 40 maç
-- Kaynak erişimi çalışmadığı için bu çalışma fiilen veri doğrulayamadı; bir sonraki çalışma 17 Eki sonuçlarını (Takvim'de hâlâ skorsuz) tekrar denemeli
+- Eklenen **3**, güncellenen **8** (6 sonuç + 2 saat), atlanan **0**
+- Kaynak erişimi önceki çalıştırmada başarısızdı; bu çalıştırmada sorunsuz
