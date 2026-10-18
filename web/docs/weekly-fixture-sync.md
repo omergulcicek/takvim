@@ -59,9 +59,11 @@ Ousmane Dembélé 75' (Kırmızı kart)
 - Dosya içindeki yorumlar Türkçe. SQL anahtar kelimeleri ve tablo/kolon adları hariç.
 - Yazmadan önce Takvim'de aynı değişiklik var mı kontrol et.
 - Dal: `claude-automations`. Platform başka bir `claude/` dalı atarsa o dalı kullan. Her durumda önce `main`'i merge et.
-- Migration veya kod değişikliği varsa: commit, push, PR, merge, sonra `apply_migration`.
-- Yalnızca log değiştiyse: commit, push. PR yok.
-- Hiçbir değişiklik yoksa: commit yok, PR yok, `apply_migration` yok.
+- Migration dosyasını yaz, commit et, dalda push et.
+- Migration'ı `apply_migration` ile Takvim'e doğrudan uygula. PR açma, merge bekleme.
+- Bir migration başarısız olursa logla ve sonrakilere devam et.
+- Yalnızca log değiştiyse: commit, push.
+- Hiçbir değişiklik yoksa: commit yok, `apply_migration` yok.
 
 ## Log
 
