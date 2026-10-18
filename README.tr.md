@@ -29,11 +29,12 @@ Sitede aylık bir önizleme takvimi bulunur. Kategorileri seçip abonelik bağla
 
 ### Futbol
 
-- **Beşiktaş**, **Fenerbahçe**, **Galatasaray**, **Trabzonspor** — Lig, kupa ve Avrupa maçları
-- **Millî Takımlar** — Dünya Kupası, Uluslar Ligi, Copa América ve benzeri büyük millî takım organizasyonları
-- **Şampiyonlar Ligi** — UEFA Şampiyonlar Ligi maçları
-- **Premier Lig** — İngiltere Premier Lig maçları
-- **La Liga** — İspanya La Liga maçları
+- **Beşiktaş**, **Fenerbahçe**, **Galatasaray**, **Trabzonspor** — Süper Lig ve Avrupa maçları (Şampiyonlar Ligi, Avrupa Ligi, Konferans Ligi)
+- **Şampiyonlar Ligi** — Takip edilen kulüplerin UEFA Şampiyonlar Ligi maçları
+- **Premier Lig** — Takip edilen kulüplerin Premier Lig maçları
+- **La Liga** — Barcelona ve Real Madrid'in La Liga maçları
+- **Serie A** — Inter, Juventus, Milan, Napoli ve Roma'nın birbirine karşı oynadığı Serie A maçları
+- **Millî Takımlar** — Türkiye, İspanya, Fransa, İngiltere, Portekiz, Almanya, Arjantin ve Brezilya'nın Dünya Kupası, Uluslar Ligi, Avrupa Şampiyonası, Copa América maçları ve Türkiye hazırlık maçları
 
 ## Nasıl kullanılır?
 
