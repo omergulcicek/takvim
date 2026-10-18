@@ -5,21 +5,26 @@
 
 ## Kaynaklar
 
-- ESPN scoreboard API — erişilemedi (HTTP 403)
-- Web araması (Gençlerbirliği - Galatasaray 17 Eki 2026) — sonuç bulunamadı; yalnızca eski sezon sonuçları döndü
+- ESPN scoreboard API (site.api.espn.com) — skor ve gol dakikaları
+- skysports.com — skor doğrulaması (ikinci kaynak)
+
+## Erişilemeyen kaynaklar
+
+- bbc.co.uk — erişilemedi
+- fotmob.com API — HTTP 404
 
 ## Migrations
 
-Yok.
+- `20261018230001_update_leeds_manchester_united_result.sql` — Leeds United 1 - 1 Manchester United sonucu ve goller yazıldı
+- `20261018230002_update_nottingham_forest_arsenal_result.sql` — Nottingham Forest 0 - 1 Arsenal sonucu ve gol yazıldı
+- `20261018230003_update_real_madrid_sevilla_result.sql` — Real Madrid 4 - 1 Sevilla sonucu ve goller yazıldı
+
+Üçü de `apply_migration` ile Takvim'e uygulandı.
 
 ## Skipped
 
-- 17 Eki sonuçları (Everton - Chelsea, Gençlerbirliği - Galatasaray, Brentford - Liverpool, Manchester City - Ipswich, Fenerbahçe - Alanyaspor, Real Betis - Barcelona) — en az iki kaynak doğrulanamadı; skor yazılmadı
-- 18 Eki maçları (Leeds United - Manchester United, Nottingham Forest - Arsenal, Real Madrid - Sevilla) — sonuç kaynağına erişilemedi
-- 1 Kasım fikstür saatleri (Kasımpaşa - Beşiktaş, Trabzonspor - Gaziantep FK) — doğrulama yok; 12:00 yer tutucusu duruyor
-- Pencerenin yeni maçları — kaynağa erişilemediği için taranamadı
+- Pencerenin yeni maçları — kaynaklardan fikstür taraması yapılamadı (kaynak erişilemedi); mevcut kayıtlar değiştirilmedi
 
 ## Notes
 
-- Eklenen **0**, güncellenen **0**, atlanan **11**, değişmeyen: DB'deki penceredeki maçlar
-- Kaynak erişimi 2. gündür çalışmıyor; 17 Eki sonuçları hâlâ skorsuz
+- Eklenen **0**, güncellenen **3**, atlanan **1**, değişmeyen: 17 Eki sonuçları (6 maç) zaten skorlu, pencere maçları değişmedi
