@@ -31,3 +31,11 @@ Erişilemeyen kaynak: yok. Web araması 17 Eki 2026 maçları için sonuç dönd
 
 - Eklenen **3**, güncellenen **8** (6 sonuç + 2 saat), atlanan **0**
 - Kaynak erişimi önceki çalıştırmada başarısızdı; bu çalıştırmada sorunsuz
+
+## Akşam kontrolü (2. çalıştırma)
+
+- Pencere: 2026-10-18 → 2026-11-01; sonuç kontrolü: 2026-10-15 → 2026-10-17 + bugünkü maçlar
+- Kaynaklar: ESPN scoreboard API — erişilemedi (HTTP 403); web araması (Leeds United - Manchester United 18 Eki 2026) — sonuç bulunamadı
+- Migrations: Yok.
+- Atlanan: Leeds United - Manchester United, Nottingham Forest - Arsenal, Real Madrid - Sevilla (18 Eki) — skor en az iki kaynakta doğrulanamadı, kaynak erişilemedi
+- 17 Eki sonuçları ve 1 Kasım fikstürü Takvim'de zaten güncel; değişiklik yok
