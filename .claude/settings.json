@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Supabase__apply_migration",
+      "Bash(git:*)",
+      "Bash(gh:*)"
+    ]
+  }
+}
