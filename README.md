@@ -29,11 +29,12 @@ The site includes a monthly calendar preview. Select categories, copy the subscr
 
 ### Football
 
-- **Beşiktaş**, **Fenerbahçe**, **Galatasaray**, **Trabzonspor** — League, cup, and European matches
-- **World Cup** — FIFA World Cup matches
-- **Champions League** — UEFA Champions League matches
-- **Premier League** — English Premier League matches
-- **La Liga** — Spanish La Liga matches
+- **Beşiktaş**, **Fenerbahçe**, **Galatasaray**, **Trabzonspor** — Süper Lig and European matches (Champions League, Europa League, Conference League)
+- **Champions League** — UEFA Champions League matches of tracked clubs
+- **Premier League** — Premier League matches of tracked clubs
+- **La Liga** — La Liga matches of Barcelona and Real Madrid
+- **Serie A** — Serie A matches between Inter, Juventus, Milan, Napoli and Roma
+- **National Teams** — Matches of Türkiye, Spain, France, England, Portugal, Germany, Argentina and Brazil (World Cup, Nations League, European Championship, Copa América, and Türkiye friendlies)
 
 ## How to use
 
