@@ -1,72 +1,90 @@
-# Haftalık Fikstür Senkronizasyonu (Runbook)
+# Haftalık Fikstür Senkronizasyonu
 
-Görev: Takvim fikstür senkronizasyonu. Her gün 02:00 (Europe/Istanbul) çalışır.
+Görev her gün 02:00 (Europe/Istanbul) çalışır. Bu dosya görev metniyle aynı kuralları içerir. Çelişki olursa görev metni geçerlidir.
 
-Repo: omergulcicek/takvim. Kurallar: web/docs/event-data-rules.md. Bu metin çelişirse bu metin geçerlidir.
-Supabase: yalnızca "Takvim" (ID: ieqzwanwsikryweutnvk). SQL yalnızca INSERT ve UPDATE. DELETE, TRUNCATE, DROP yasak.
+## Veritabanı
 
-TARİHLER (Europe/Istanbul)
-- Pencere: bugün → bugün+14 gün. Fikstür ve saat kontrolü yalnızca bu pencerede.
-- Sonuç: yalnızca dün. Dünden yeni maç eklenmez.
+- Proje: "Takvim" (`ieqzwanwsikryweutnvk`). Başka projeye yazılmaz.
+- Yalnızca `INSERT` ve `UPDATE`. `DELETE`, `TRUNCATE`, `DROP` yasak.
+- Kurallar: `web/docs/event-data-rules.md`.
 
-EKLENECEK MAÇLAR (lig/turnuva; takım listede değilse eklenmez)
-- Galatasaray, Fenerbahçe, Beşiktaş, Trabzonspor: Süper Lig, Şampiyonlar Ligi, Avrupa Ligi, Konferans Ligi.
-- Arsenal, Liverpool, Manchester City, Manchester United, Tottenham, Chelsea: Premier Lig ve Şampiyonlar Ligi.
-- Barcelona, Real Madrid: La Liga ve Şampiyonlar Ligi.
-- Bayern Münih, Paris Saint-Germain, Inter, Juventus, Milan, Napoli, Roma: yalnızca Şampiyonlar Ligi. Bu takımların lig maçı eklenmez.
-- Serie A: yalnızca Inter, Juventus, Milan, Napoli, Roma'nın birbirleriyle oynadığı maçlar. Bu beş takımın Şampiyonlar Ligi maçı Serie A değil, yalnızca Şampiyonlar Ligi'dir.
-- Avrupa Ligi ve Konferans Ligi: yalnızca Galatasaray, Fenerbahçe, Beşiktaş, Trabzonspor maçları. Ayrı kategori yok; yalnızca takım kategorisi bağlanır.
-- Milli takımlar: İspanya, Fransa, İngiltere, Portekiz, Almanya, Türkiye, Arjantin, Brezilya. En az biri oynuyorsa milli-takimlar. Hazırlık maçı yalnızca Türkiye oynuyorsa.
-- HARİÇ: Lig Kupası, Türkiye Kupası ve listede olmayan her maç.
+## Tarihler (Europe/Istanbul)
 
-KATEGORİ SLUG'LARI
-galatasaray, fenerbahce, besiktas, trabzonspor, premier-lig, la-liga, serie-a, sampiyonlar-ligi, milli-takimlar. Avrupa Ligi ve Konferans Ligi için slug yok.
+- Fikstür penceresi: bugün → bugün+14 gün.
+- Sonuç kontrolü: yalnızca dün.
 
-YENİ MAÇ EKLEME
-- Başlık: "Ev - Deplasman". Skor başlığa yazılmaz.
-- Aynı başlık ve start_date zaten varsa ekleme.
-- Saat kaynakta net değilse 12:00 (Europe/Istanbul) yaz. Saat netleşince UPDATE yap.
-- end_date = start_date + 2 saat. Bitiş 00:00 olursa 23:55 yaz.
-- Açıklama: event-data-rules.md §2.2'ye göre. Lig maçlarında NULL.
+## Kapsam
 
-SAAT, ERTELEME, İPTAL
-- Kaynak farklı saat veriyorsa start_date ve end_date güncelle.
-- Ertelenen maçta yeni tarihi yaz; pencere dışında olsa bile.
-- İptal edilen maçın başlığı: "Ev - Deplasman (İptal)". Skor yazma, açıklamaya dokunma.
+Takım listede değilse maç eklenmez.
 
-SKOR (yalnızca dünün skorsuz maçları)
-- Kaynakta FT, Full time, Final veya Maç sonu etiketi yoksa yazma. Dakika (örn. 67'), Canlı, Devre arası, Second Half görürsen yazma.
-- Skor zaten yazılmışsa (başlıkta "N - N") dokunma.
-- Başlık: "Ev X - Y Deplasman".
-- Açıklama: ev satırları, boş satır, deplasman satırları. Yalnızca bir taraf satır içeriyorsa boş satır yok. Hiç gol yoksa NULL.
-- Satır biçimi: "İsim dk'" (SQL'de dakika işareti iki kez yazılır: 31''). Penaltı: "(Penaltı)". Kırmızı kart: "(Kırmızı kart)". Kendi kalesine: "(Kendi Kalesine)".
-- Aynı oyuncunun birden fazla golü tek satırda: "Folarin Balogun 31'', 45+5''".
-- Mevcut "(kk)" kayıtlarına dokunma. Yeni kayıtta "(Kendi Kalesine)" kullan.
+| Takımlar | Eklenecek lig/turnuva |
+| --- | --- |
+| Galatasaray, Fenerbahçe, Beşiktaş, Trabzonspor | Süper Lig, Şampiyonlar Ligi, Avrupa Ligi, Konferans Ligi |
+| Arsenal, Liverpool, Manchester City, Manchester United, Tottenham, Chelsea | Premier Lig, Şampiyonlar Ligi |
+| Barcelona, Real Madrid | La Liga, Şampiyonlar Ligi |
+| Bayern Münih, Paris Saint-Germain, Inter, Juventus, Milan, Napoli, Roma | Yalnızca Şampiyonlar Ligi |
+| İspanya, Fransa, İngiltere, Portekiz, Almanya, Türkiye, Arjantin, Brezilya | Milli takım maçları. Hazırlık maçı yalnızca Türkiye oynuyorsa |
 
-KAYNAK
-- En az iki güvenilir kaynak kullan (resmi lig/kulüp sitesi veya bilinen spor sonuç sitesi). Kaynak URL'lerini logla.
-- Kaynaklar çelişirse veya bilgi bulunamazsa maçı atla ve logla. Uydurma.
+Ek kurallar:
 
-MIGRATION
-- Dosya: web/supabase/migrations/YYYYMMDDHHMMSS_<fiil>_<konu>.sql. Fiil: add_, update_<slug>_kickoff, update_<slug>_result, fix_.
-- Dosyanın ilk satırı Türkçe yorum.
-- Her değişiklik idempotent: NOT EXISTS, ON CONFLICT DO NOTHING.
-- Yazmadan önce Takvim'de aynı değişiklik var mı kontrol et.
-- Değişiklik yoksa dosya yazma.
+- Serie A: yalnızca Inter, Juventus, Milan, Napoli, Roma'nın birbirine karşı oynadığı maçlar. Bu beş takım Şampiyonlar Ligi'nde karşılaşırsa yalnızca `sampiyonlar-ligi` bağlanır.
+- Avrupa Ligi ve Konferans Ligi: yalnızca Galatasaray, Fenerbahçe, Beşiktaş, Trabzonspor maçları.
+- Lig Kupası ve Türkiye Kupası eklenmez.
 
-GİT
-1. Dal: claude-automations. Yoksa main'den oluştur. Varsa önce main'i merge et.
-2. Log: web/docs/logs/YYYY-MM-DD-haftalik-kontrol.md. Dosya varsa sonuna "## Run HH:MM TR" bölümü ekle.
-3. Migration veya kod değişikliği varsa: commit, push. Açık PR yoksa claude-automations → main PR aç. PR'ı main'e merge et. Sonra her yeni migration için Takvim'de apply_migration çağır. Araç yoksa görevi başarısız say.
-4. Yalnızca log değiştiyse: commit, push. PR açma.
-5. Hiçbir şey değişmediyse: commit, PR, apply_migration yok.
-6. "Canlı takvim değişti" yalnızca apply_migration başarılıysa söylenir.
+Kategori slug'ları: `galatasaray`, `fenerbahce`, `besiktas`, `trabzonspor`, `premier-lig`, `la-liga`, `serie-a`, `sampiyonlar-ligi`, `milli-takimlar`.
+Avrupa Ligi ve Konferans Ligi için slug yoktur. Maç yalnızca takım slug'ına bağlanır.
 
-LOG (web/docs/logs/...)
-- Çalıştırma zamanı, pencere, dün, dal.
-- Kaynak URL'leri.
-- Eklenenler, güncellenenler, atlananlar (neden), değişmeyenler.
-- Oluşturulan migration dosyaları.
+## Yeni maç
 
-RAPOR
-Eklenen, değişen, atlanan, değişmeyen sayıları. Migration'ların uygulanıp uygulanmadığı. Atlananların nedenleri.
+- Başlık: `Ev - Deplasman`. Skor başlığa yazılmaz.
+- Aynı başlık ve aynı `start_date` zaten varsa eklenmez.
+- Kaynakta saat kesin değilse `12:00` (Europe/Istanbul) yazılır. Saat netleşince güncellenir.
+- Alanlar: `status = 'published'`, `recurrence = 'none'`, `is_all_day = false`.
+- `end_date = start_date + 2 saat`. Bitiş `00:00` olursa `23:55` yazılır.
+- Açıklama: lig maçlarında `NULL`. Şampiyonlar Ligi, Avrupa Ligi, Konferans Ligi ve milli maçlarda tur metni (`event-data-rules.md` §2.2).
+- Kategori bağlantısı: `event_categories` üzerinden, `ON CONFLICT DO NOTHING`.
+
+## Saat, erteleme, iptal
+
+- Kaynak saat farklıysa `start_date` ve `end_date` güncellenir.
+- Ertelenen maçta yeni tarih yazılır, pencere dışında olsa bile.
+- İptal edilen maçın başlığı `Ev - Deplasman (İptal)` olur. Skor yazılmaz, açıklamaya dokunulmaz.
+
+## Skor (yalnızca dünün skorsuz maçları)
+
+- Kaynakta `FT`, `Full time`, `Final` veya `Maç sonu` etiketi olmalı.
+- Canlı, devre arası, dakika (`67'`) veya `Second Half` görünüyorsa skor yazılmaz.
+- Başlıkta zaten `N - N` varsa dokunulmaz.
+- Başlık: `Ev X - Y Deplasman`.
+- Açıklama: ev satırları, boş satır, deplasman satırları. Yalnızca bir taraf satır içeriyorsa boş satır yok. Gol yoksa `NULL`.
+- Satır: `İsim dk'`. SQL'de dakika işareti iki kez yazılır: `31''`.
+- Penaltı: `(Penaltı)`. Kırmızı kart: `(Kırmızı kart)`. Kendi kalesine: `(Kendi Kalesine)`.
+- Aynı oyuncunun golleri tek satırda: `Folarin Balogun 31'', 45+5''`.
+- Eski `(kk)` kayıtlara dokunulmaz. Yeni kayıtlarda `(Kendi Kalesine)` kullanılır.
+
+## Kaynak
+
+- En az iki güvenilir kaynak kullanılır: resmi lig veya kulüp sitesi ya da bilinen spor sonuç sitesi.
+- Kaynaklar çelişirse veya bilgi yoksa maç atlanır. Bilgi uydurulmaz.
+
+## Migration
+
+- Dosya: `web/supabase/migrations/YYYYMMDDHHMMSS_<fiil>_<konu>.sql`.
+- Fiil: `add_`, `update_<slug>_kickoff`, `update_<slug>_result`, `fix_`.
+- İlk satır Türkçe yorum.
+- Idempotent: `NOT EXISTS`, `ON CONFLICT DO NOTHING`.
+- Yazmadan önce Takvim'de aynı değişiklik olup olmadığı kontrol edilir.
+- Değişiklik yoksa dosya yazılmaz.
+
+## Git
+
+1. Dal: `claude-automations`. Yoksa `main`'den oluştur. Varsa önce `main`'i merge et.
+2. Log: `web/docs/logs/YYYY-MM-DD-haftalik-kontrol.md`. Dosya varsa sonuna `## Run HH:MM TR` bölümü ekle.
+3. Migration veya kod değişikliği varsa: commit, push, `claude-automations` → `main` PR (açık PR yoksa), merge. Sonra her yeni migration için Takvim'de `apply_migration`. Araç yoksa görev başarısız sayılır.
+4. Yalnızca log değiştiyse: commit, push. PR açılmaz.
+5. Hiçbir değişiklik yoksa: commit, PR, `apply_migration` yok.
+6. "Canlı takvim değişti" ifadesi yalnızca `apply_migration` başarılıysa kullanılır.
+
+## Rapor
+
+Eklenen, güncellenen, atlanan (neden) ve değişmeyen maç sayıları. Migration uygulandı mı.
