@@ -11,18 +11,27 @@ Görev her gün 02:00 (Europe/Istanbul) çalışır. Bu dosya tek kaynaktır.
 - Takım listede değilse maç eklenmez. Lig Kupası ve Türkiye Kupası eklenmez.
 - Saat kesin değilse `12:00` (Europe/Istanbul). Netleşince güncellenir.
 - Ertelenen maçta tarih güncellenir. İptal: `Ev - Deplasman (İptal)`.
+- Görev her koşulda tamamlanır ve log yazılır. Bir kaynağın hatası görevi durdurmaz.
 
 ## Kaynaklar
 
+Sıra: sonuç siteleri, resmi siteler, haber siteleri.
+
+- Sonuç: flashscore.com, flashscore.com.tr, sofascore.com, livescore.com, fotmob.com, site.api.espn.com, espn.com, footballwebpages.co.uk
 - Resmi: premierleague.com, laliga.com, fcbarcelona.com, realmadrid.com, uefa.com, legaseriea.it, tff.org
-- Sonuç: site.api.espn.com, espn.com, footballwebpages.co.uk, flashscore.com, flashscore.com.tr, livescore.com, sofascore.com, fotmob.com
 - Haber: bbc.co.uk, skysports.com, fanatik.com.tr, milliyet.com.tr
 
-Kural:
+Hata yönetimi:
 
-- Bitiş (FT) ve skor en az iki kaynakta aynı olmalı.
+- Bir kaynak hata verirse (403, zaman aşımı, boş sayfa, alan adı çözümlenemiyor) o kaynak atlanır ve sıradaki kaynağa geçilir.
+- Kaynak hatası görevin başarısız olduğu anlamına gelmez.
+- Hiçbir kaynak yanıt vermezse maç atlanır. Logda "kaynak erişilemedi" yazılır.
+
+Doğrulama:
+
+- Bitiş (FT) ve skor en az iki farklı kaynakta aynı olmalı.
 - Gol dakikaları tek kaynaktan alınabilir. Diğer kaynakla 1 dakikadan fazla çelişiyorsa maç atlanır.
-- Kaynak yoksa veya çelişiyorsa atla. Bilgi uydurma.
+- Kaynaklar çelişiyorsa veya bilgi yoksa maç atlanır. Bilgi uydurulmaz.
 
 ## Skor
 
@@ -56,4 +65,4 @@ Ousmane Dembélé 75' (Kırmızı kart)
 
 ## Log
 
-`web/docs/logs/YYYY-MM-DD-haftalik-kontrol.md`. Migration listesi: dosya adı ve tek satır Türkçe özet. Rapor: eklenen, güncellenen, atlanan (neden), değişmeyen maç sayıları.
+`web/docs/logs/YYYY-MM-DD-haftalik-kontrol.md`. Her çalıştırmada yazılır. İçerik: kullanılan kaynaklar, erişilemeyen kaynaklar, eklenen, güncellenen ve atlanan maçlar (neden), değişmeyen maç sayısı, migration listesi (dosya adı ve tek satır Türkçe özet).
