@@ -2,7 +2,7 @@
 
 Canonical rule set for inserting and updating Supabase calendar events in this repo. Derived from existing migration patterns and `docs/MEMORIES.md`.
 
-> **Apply path:** write `supabase/migrations/YYYYMMDDHHMMSS_<verb>_<slug>.sql` → apply remotely with `apply_migration`.  
+> **Apply path:** write `web/supabase/migrations/YYYYMMDDHHMMSS_<verb>_<slug>.sql` → apply remotely with `apply_migration`.  
 > Never use legacy `events.category_id`. Always use the `event_categories` junction table.
 
 When this file is referenced for match results or kickoff changes, also follow templates below exactly. For the weekly sync workflow, see [`docs/weekly-fixture-sync.md`](./weekly-fixture-sync.md).
@@ -161,7 +161,7 @@ Player Name 37'', 45+1'', 87'' (Penaltı)   -- same player, multiple goals
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Apostrophe       | In SQL minutes use `37''` → displays as `37'`                                                                                                        |
 | Order            | Home lines first, blank line, then away — **omit the blank (and the empty side) when only one side has lines**; never start or end with a blank line |
-| Annotations      | `(Penaltı)`, `(Kırmızı kart)`, own goal: `(kk)`                                                                                                      |
+| Annotations      | `(Penaltı)`, `(Kırmızı kart)`, kendi kalesine: `(Kendi Kalesine)`                                                                                                      |
 | No goals         | `description = NULL` (`NULLIF(E'', '')`)                                                                                                             |
 | Round text       | On result, replace round description with the goal list                                                                                              |
 | Idempotent WHERE | Old title **or** scored title: `WHERE title = 'A - B' OR title = 'A 1 - 0 B'`                                                                        |
@@ -264,8 +264,8 @@ Hijri days often manage `start_date`/`end_date` via override tables; inspect exi
 
 Update UI maps as well as SQL seeds:
 
-- `src/features/calendar/helpers/categories.ts` → color map
-- `src/features/calendar/helpers/category-groups.ts` → group order
+- `web/src/features/calendar/helpers/categories.ts` → color map
+- `web/src/features/calendar/helpers/category-groups.ts` → group order
 
 ---
 
