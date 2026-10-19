@@ -28,3 +28,9 @@
 ## Notes
 
 - Eklenen **0**, güncellenen **3**, atlanan **1**, değişmeyen: 17 Eki sonuçları (6 maç) zaten skorlu, pencere maçları değişmedi
+
+## Ek kontrol (gündüz koşusu)
+
+- DB kontrolü: 16–18 Eki aralığında skorsuz kapsam içi maç kalmadı; yeni migration gerekmedi.
+- site.api.espn.com — HTTP 403 (erişilemedi); fikstür penceresi bu koşuda yeniden taranamadı (kaynak erişilemedi).
+- Eklenen **0**, güncellenen **0**, atlanan **0**.
