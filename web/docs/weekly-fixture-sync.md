@@ -7,7 +7,7 @@ Görev her gün 02:00 (Europe/Istanbul) çalışır. Bu dosya tek kaynaktır.
 - Proje: "Takvim" (`ieqzwanwsikryweutnvk`). Yalnızca `INSERT` ve `UPDATE`.
 - SQL ve kategori kuralları: `web/docs/event-data-rules.md`.
 - Fikstür penceresi: bugün → bugün+14 gün.
-- Sonuç kontrolü: dün dahil son 3 gün içindeki skorsuz kapsam içi maçlar. Bu aralıktan yeni maç eklenmez.
+- Sonuç kontrolü: geçmişteki tüm skorsuz kapsam içi maçlar (alt sınır yok; yalnızca `start_date + 3 saat < now()` olan, yani bitmiş olması beklenen maçlar). Önce en eski skorsuz maçtan başlanır. Geçmişte skorsuz maç kalmazsa kontrol biter. Geçmiş maçlardan yeni maç eklenmez.
 - Takım listede değilse maç eklenmez. Lig Kupası ve Türkiye Kupası eklenmez.
 - Saat kesin değilse `12:00` (Europe/Istanbul). Netleşince güncellenir.
 - Ertelenen maçta tarih güncellenir. İptal: `Ev - Deplasman (İptal)`.
