@@ -46,12 +46,18 @@ Skor Sky Sports + arama sonuçlarındaki en az bir bağımsız raporla eşleşti
 
 Migration: `20261022220000_update_cl_3_hafta_results.sql` — 9 maç için skor ve gol güncellemesi (apply_migration ile uygulandı).
 
-## Atlanan / doğrulanamayan (hâlâ skorsuz)
+## Ek tur: önceden atlanan 2 maç güncellendi
 
-- **Lille - Galatasaray** (skor 2-4, Sky Sports + haberler): 52' dakikadaki Galatasaray golünün sahibi kaynaklarda çelişiyor (Torreira / Bentaleb kk / Berke Özer). Gol satırı uydurulmadı, maç atlandı.
-- **Napoli - Bodø/Glimt** (skor 4-3): Sofascore ile diğer kaynaklar Fet golünde 90' / 90+4' (1 dakikadan fazla fark) ve Helmersen/Bjørtuft dakikalarında çelişiyor. Maç atlandı.
+Kullanıcı talimatıyla çelişen dakika/isim durumlarında çoğunluk veya en güvenilir kaynak (ESPN zaman çizelgesi, kulüp raporu) esas alındı.
 
-Bu iki maç geçmişte skorsuz kalmaya devam ediyor.
+- Napoli 4 - 3 Bodø/Glimt: Politano 1', Hauge 27', McTominay 41', 75', Helmersen 62', Bjørtuft k.k. 88' (kaynaklarda 89'), Fet 90+4' (ESPN).
+- Lille 2 - 4 Galatasaray: Akgün 2', Diaoune 7', 39', Batrakov 44', Bentaleb k.k. 52' (çoğunluk; ESPN Berke Özer yazıyor), Osimhen 61'.
+
+Migration: `20261022221000_update_napoli_lille_results.sql` — 2 maç için skor ve gol güncellemesi.
+
+## Atlanan / doğrulanamayan
+
+Yok. Geçmişte skorsuz maç kalmadı (11/11 güncellendi).
 
 ## Diğer
 
