@@ -1,45 +1,120 @@
-# Haftalık Fikstür Senkronizasyonu
+# Fikstür Senkronizasyonu
 
-Görev her gün 02:00 (Europe/Istanbul) çalışır. Bu dosya tek kaynaktır.
+Görev her gün 02:00 (Europe/Istanbul) çalışır. **Bu dosya tek kaynaktır.** Zamanlayıcı promptu yalnızca bu dosyaya yönlendirir; kural eklemez, kural ezmez. Bir şey değişecekse burada değişir.
 
-## Kurallar
+SQL ve kategori kuralları: [`event-data-rules.md`](./event-data-rules.md).
 
-- Proje: "Takvim" (`ieqzwanwsikryweutnvk`). Yalnızca `INSERT` ve `UPDATE`.
-- SQL ve kategori kuralları: `web/docs/event-data-rules.md`.
-- Fikstür penceresi: bugün → bugün+14 gün.
-- Sonuç kontrolü: geçmişteki tüm skorsuz kapsam içi maçlar (alt sınır yok; yalnızca `start_date + 3 saat < now()` olan, yani bitmiş olması beklenen maçlar). Önce en eski skorsuz maçtan başlanır. Geçmişte skorsuz maç kalmazsa kontrol biter. Geçmiş maçlardan yeni maç eklenmez.
-- Takım listede değilse maç eklenmez. Lig Kupası ve Türkiye Kupası eklenmez.
-- Saat kesin değilse `12:00` (Europe/Istanbul). Netleşince güncellenir.
-- Ertelenen maçta tarih güncellenir. İptal: `Ev - Deplasman (İptal)`.
-- Görev her koşulda tamamlanır ve log yazılır. Bir kaynağın hatası görevi durdurmaz.
+## Değişkenler
+
+| Ad      | Değer                                                            |
+| ------- | ---------------------------------------------------------------- |
+| `BUGUN` | Koşunun çalıştığı günün Europe/Istanbul tarihi (`YYYY-MM-DD`)    |
+| Proje   | Takvim — `ieqzwanwsikryweutnvk`                                  |
+| Pencere | `BUGUN` → `BUGUN + 14 gün`                                       |
+| Kapsam  | Kategorilerde tanımlı takımlar. Lig Kupası ve Türkiye Kupası yok |
+
+Yalnızca `INSERT` ve `UPDATE`. Silme yok.
+
+---
+
+## Adımlar
+
+> **Adımlar birbirinden bağımsızdır.** Bir adımın boş sonuç vermesi sonraki adımı atlamanın gerekçesi değildir. Her adım kendi sorgusunu çalıştırır, kendi sonucunu loglar. "Bugün yapacak iş yok" kararı ancak üç adımın üçü de kendi sorgusunu çalıştırdıktan sonra verilebilir.
+
+### Adım 1 — Geçmiş skorsuz maçlar
+
+Bitmiş olması beklenen ama skoru yazılmamış maçları bul:
+
+```sql
+NOT (title ~ '[0-9] - [0-9]')
+  AND title LIKE '% - %'
+  AND start_date + interval '3 hours' < now()
+```
+
+Alt sınır yok. `start_date`'e göre eskiden yeniye sırala, en eskiden başla. Her maç için skoru ve olayları doğrula (bkz. Doğrulama). Satır sayısını ve listeyi logla.
+
+### Adım 2 — Fikstür penceresi
+
+Pencerede (`BUGUN` → `+14 gün`) kapsam içi takımların oynayacağı maçları kaynaklardan çıkar ve Takvim'de olmayanları ekle.
+
+- Bu adım **her koşuda** çalışır. Adım 1 boş dönse de çalışır.
+- Takım kapsam listesinde değilse maç eklenmez.
+- Geçmiş maçlardan yeni maç eklenmez.
+- Ekleme yoksa logda "pencerede eksik maç yok" yazılır ve kaç maç kontrol edildiği belirtilir.
+
+### Adım 3 — Saat taraması
+
+Penceredeki **gelecek** maçlardan saati `12:00` (Europe/Istanbul) placeholder olanları sorgula ve her biri için kesin başlama saatini aramaya çalış.
+
+```sql
+start_date > now()
+  AND start_date < now() + interval '14 days'
+  AND to_char(start_date AT TIME ZONE 'Europe/Istanbul', 'HH24:MI') = '12:00'
+```
+
+- Saat iki kaynakta aynıysa güncelle. Değilse `12:00` kalır ve logda "saat netleşmedi" olarak yazılır.
+- Bu adım **her koşuda** çalışır; placeholder sayısı sıfır olsa bile sorgu çalıştırılır ve sonuç loglanır.
+- Maç 72 saatten yakınsa ve saat hâlâ netleşmediyse logda ayrıca **uyarı** satırı açılır.
+
+### Adım 4 — Migration ve uygulama
+
+Her değişiklik için `web/supabase/migrations/YYYYMMDDHHMMSS_<fiil>_<konu>.sql`. Fiil `add` veya `update`, konu Türkçe ve ASCII (`turkiye_fransa`). Dosya içi yorumlar Türkçe.
+
+Yazmadan önce aynı değişiklik Takvim'de var mı kontrol et. Dosyayı yaz, commit et, `apply_migration` ile uygula. Bir migration başarısız olursa logla ve sonrakilere devam et.
+
+### Adım 5 — Log
+
+`web/docs/logs/<BUGUN>-haftalik-kontrol.md`. **Her koşuda yazılır**, değişiklik olmasa bile.
+
+Üç adımın üçü de ayrı başlık altında raporlanır. Bir adım hiç iş çıkarmadıysa bunu sorgu sonucuyla birlikte yazar; adım başlığı logdan düşürülmez.
+
+| Bölüm             | İçerik                                                            |
+| ----------------- | ----------------------------------------------------------------- |
+| Adım 1 — Sonuçlar | Skorsuz maç sayısı ve listesi, güncellenen, atlanan (nedeniyle)   |
+| Adım 2 — Fikstür  | Kontrol edilen maç sayısı, eklenen maçlar, eklenmeyenler (neden)  |
+| Adım 3 — Saatler  | Placeholder sayısı, netleşen saatler, netleşmeyenler, uyarılar    |
+| Kaynaklar         | Kaynak bazında erişim durumu (erişildi / 403 / 404 / zaman aşımı) |
+| Migration         | Dosya adı ve tek satır Türkçe özet                                |
+| Kalan iş          | Hâlâ skorsuz maçlar, hâlâ placeholder saatler                     |
+
+### Adım 6 — Push
+
+Önce `main`'i çalışma dalına merge et, sonra push et.
+
+- Tercih edilen dal: `claude-automations`.
+- Platform koşuya kendi `claude/...` dalını atadıysa o dal kullanılır; bu bir hata değildir, logda dal adı yazılır.
+- PR açılmaz, merge beklenmez. Migration zaten `apply_migration` ile uygulanmıştır.
+
+---
 
 ## Kaynaklar
 
-Sıra: sonuç siteleri, resmi siteler, haber siteleri.
+Sıra: sonuç siteleri, resmî siteler, haber siteleri.
 
-- Sonuç: flashscore.com, flashscore.com.tr, sofascore.com, livescore.com, fotmob.com, site.api.espn.com, espn.com, footballwebpages.co.uk
-- Resmi: premierleague.com, laliga.com, fcbarcelona.com, realmadrid.com, uefa.com, legaseriea.it, tff.org
-- Haber: bbc.co.uk, skysports.com, fanatik.com.tr, milliyet.com.tr
+| Tür              | Kaynaklar                                                                                                                        |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Sonuç ve fikstür | flashscore.com, flashscore.com.tr, sofascore.com, livescore.com, fotmob.com, site.api.espn.com, espn.com, footballwebpages.co.uk |
+| Kart ve olay     | site.api.espn.com, fotmob.com, mackolik.com, tff.org (resmî maç raporu)                                                          |
+| Resmî            | premierleague.com, laliga.com, fcbarcelona.com, realmadrid.com, uefa.com, legaseriea.it, tff.org                                 |
+| Haber            | bbc.co.uk, skysports.com, fanatik.com.tr, milliyet.com.tr                                                                        |
 
-Hata yönetimi:
+Bir kaynak hata verirse (403, 404, zaman aşımı, boş sayfa, alan adı çözümlenemiyor) o kaynak atlanır ve sıradakine geçilir. Kaynak hatası görevin başarısız olduğu anlamına gelmez. Hiçbir kaynak yanıt vermezse maç atlanır ve logda "kaynak erişilemedi" yazılır.
 
-- Bir kaynak hata verirse (403, zaman aşımı, boş sayfa, alan adı çözümlenemiyor) o kaynak atlanır ve sıradaki kaynağa geçilir.
-- Kaynak hatası görevin başarısız olduğu anlamına gelmez.
-- Hiçbir kaynak yanıt vermezse maç atlanır. Logda "kaynak erişilemedi" yazılır.
+## Doğrulama
 
-Doğrulama:
-
-- Bitiş (FT) ve skor en az iki farklı kaynakta aynı olmalı.
+- Bitiş (FT) ve skor **en az iki farklı kaynakta** aynı olmalı.
 - Gol dakikaları tek kaynaktan alınabilir. Diğer kaynakla 1 dakikadan fazla çelişiyorsa maç atlanır.
-- Kaynaklar çelişiyorsa veya bilgi yoksa maç atlanır. Bilgi uydurulmaz.
+- **Kırmızı kart:** kartın varlığı ve oyuncu adı en az iki kaynakta aynı olmalı. Kartın varlığı doğrulanıp oyuncu adı doğrulanamazsa kart satırı yazılmaz, ancak logda "kart doğrulanamadı" satırı açılır — sessizce düşürülmez.
+- Kaynaklar çelişiyorsa veya bilgi yoksa maç atlanır. **Bilgi uydurulmaz.**
+- Önceki koşunun yazdığı varsayılarak kontrol atlanmaz.
 
-## Skor
+## Skor ve olay formatı
 
 Yalnızca tamamlanmış maçların skoru yazılır. Devam eden maçlar atlanır.
 
 - Başlık: `Ev X - Y Deplasman`. Örnek: `Türkiye 4 - 2 Fransa`.
 - Kendi kalesine golü, golden faydalanan takımın bloğunda yazılır.
-- Açıklama formatı (dummy veri):
+- Saat kesin değilse `12:00` (Europe/Istanbul) yazılır ve Adım 3 tarafından takip edilir.
 
 ```text
 Arda Güler 10'
@@ -51,20 +126,18 @@ Kylian Mbappé 3', 7'
 Ousmane Dembélé 75' (Kırmızı kart)
 ```
 
-- Tek taraf satır varsa boş satır yok. Olay yoksa `NULL`.
+Tek taraf satır varsa boş satır yok. Olay yoksa `NULL`.
 
-## Migration ve git
+Ertelenen maçta tarih güncellenir. İptal: `Ev - Deplasman (İptal)`.
 
-- Dosya: `web/supabase/migrations/YYYYMMDDHHMMSS_<fiil>_<konu>.sql`. Fiil `add` veya `update`. Konu Türkçe, ASCII: `turkiye_fransa`.
-- Dosya içindeki yorumlar Türkçe. SQL anahtar kelimeleri ve tablo/kolon adları hariç.
-- Yazmadan önce Takvim'de aynı değişiklik var mı kontrol et.
-- Dal: `claude-automations`. Platform başka bir `claude/` dalı atarsa o dalı kullan. Her durumda önce `main`'i merge et.
-- Migration dosyasını yaz, commit et, dalda push et.
-- Migration'ı `apply_migration` ile Takvim'e doğrudan uygula. PR açma, merge bekleme.
-- Bir migration başarısız olursa logla ve sonrakilere devam et.
-- Yalnızca log değiştiyse: commit, push.
-- Hiçbir değişiklik yoksa: commit yok, `apply_migration` yok.
+## Bitiş kriterleri
 
-## Log
+Final mesajının ilk satırı `TAMAM`, `KISMİ` veya `BAŞARISIZ`.
 
-`web/docs/logs/YYYY-MM-DD-haftalik-kontrol.md`. Her çalıştırmada yazılır. İçerik: kullanılan kaynaklar, erişilemeyen kaynaklar, eklenen, güncellenen ve atlanan maçlar (neden), değişmeyen maç sayısı, migration listesi (dosya adı ve tek satır Türkçe özet).
+| Sonuç       | Koşul                                                                                                          |
+| ----------- | -------------------------------------------------------------------------------------------------------------- |
+| `TAMAM`     | Üç adım da çalıştı; geçmişte skorsuz maç kalmadı; pencerede eksik maç yok; 72 saat içinde placeholder saat yok |
+| `KISMİ`     | Üç adım da çalıştı ama yukarıdakilerden biri karşılanmadı (kaynak bulunamadı, saat netleşmedi vb.)             |
+| `BAŞARISIZ` | Sorgu veya araç çalışmadı. Tek bir kaynağın hatası `BAŞARISIZ` değildir                                        |
+
+Bir adım hiç çalıştırılmadıysa sonuç `TAMAM` olamaz.
