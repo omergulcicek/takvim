@@ -161,7 +161,7 @@ Player Name 37'', 45+1'', 87'' (Penaltı)   -- same player, multiple goals
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Apostrophe       | In SQL minutes use `37''` → displays as `37'`                                                                                                        |
 | Order            | Home lines first, blank line, then away — **omit the blank (and the empty side) when only one side has lines**; never start or end with a blank line |
-| Annotations      | `(Penaltı)`, `(Kırmızı kart)`, kendi kalesine: `(Kendi Kalesine)`                                                                                                      |
+| Annotations      | `(Penaltı)`, `(Kırmızı kart)`, kendi kalesine: `(Kendi Kalesine)`                                                                                    |
 | No goals         | `description = NULL` (`NULLIF(E'', '')`)                                                                                                             |
 | Round text       | On result, replace round description with the goal list                                                                                              |
 | Idempotent WHERE | Old title **or** scored title: `WHERE title = 'A - B' OR title = 'A 1 - 0 B'`                                                                        |
