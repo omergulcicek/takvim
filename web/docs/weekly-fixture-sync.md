@@ -60,13 +60,21 @@ start_date > now()
 
 ### Adım 4 — Migration ve uygulama
 
-Her değişiklik için `web/supabase/migrations/YYYYMMDDHHMMSS_<fiil>_<konu>.sql`. Fiil `add` veya `update`, konu Türkçe ve ASCII (`turkiye_fransa`). Dosya içi yorumlar Türkçe.
+`web/supabase/migrations/YYYYMMDDHHMMSS_<fiil>_<konu>.sql`. Fiil `add` veya `update`, konu Türkçe ve ASCII (`turkiye_fransa`). Dosya içi yorumlar Türkçe.
+
+**Maç başına değil, adım başına tek dosya.** Bir koşuda en fazla üç migration olur: Adım 1 için bir sonuç dosyası, Adım 2 için bir fikstür dosyası, Adım 3 için bir saat dosyası. Aynı adımın birden çok maçı tek dosyada toplanır; her maç için ayrı dosya açılmaz. Örnek: `update_super_lig_9_hafta_sonuclari.sql` bir haftanın tüm sonuçlarını taşır. Bir adım iş çıkarmadıysa o dosya hiç oluşturulmaz.
 
 Yazmadan önce aynı değişiklik Takvim'de var mı kontrol et. Dosyayı yaz, commit et, `apply_migration` ile uygula. Bir migration başarısız olursa logla ve sonrakilere devam et.
 
 ### Adım 5 — Log
 
 `web/docs/logs/<BUGUN>-haftalik-kontrol.md`. **Her koşuda yazılır**, değişiklik olmasa bile.
+
+**Aynı gün ikinci koşu.** Log yazmadan önce `main`'i çalışma dalına merge et, böylece o günün önceki koşusunun logu görünür. Sonra:
+
+- Dosya yoksa → o adla yaz.
+- Dosya varsa → **üzerine yazma**, sonuna `## Koşu HH:MM TR` başlıklı yeni bölüm ekle.
+- Merge sırasında bu dosyada çakışma çıkarsa iki tarafı da koru ve koşu saatine göre sırala. Hiçbir koşunun kaydı silinmez; kuralın değişmezi budur.
 
 Üç adımın üçü de ayrı başlık altında raporlanır. Bir adım hiç iş çıkarmadıysa bunu sorgu sonucuyla birlikte yazar; adım başlığı logdan düşürülmez.
 
