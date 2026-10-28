@@ -11,13 +11,13 @@ Takvim (`ieqzwanwsikryweutnvk`), alt sınır yok, `NOT (title ~ '[0-9] - [0-9]')
 
 ## Kaynak erişimi
 
-| Kaynak | Durum |
-| --- | --- |
-| site.api.espn.com | Erişildi (skor + gol dakikaları) |
-| bbc.co.uk | Erişildi (skor doğrulama) |
-| sofascore.com | 403 |
-| fotmob.com | API 404 (kullanılamadı) |
-| skysports.com | Maç sayfası 404 (kullanılamadı) |
+| Kaynak                         | Durum                                                                             |
+| ------------------------------ | --------------------------------------------------------------------------------- |
+| site.api.espn.com              | Erişildi (skor + gol dakikaları)                                                  |
+| bbc.co.uk                      | Erişildi (skor doğrulama)                                                         |
+| sofascore.com                  | 403                                                                               |
+| fotmob.com                     | API 404 (kullanılamadı)                                                           |
+| skysports.com                  | Maç sayfası 404 (kullanılamadı)                                                   |
 | flashscore.com / livescore.com | Erişildi, ancak skor ayrıştırılmadı (iki kaynak yeterli olduğu için kullanılmadı) |
 
 ## Güncellenen (skor ESPN + BBC'de aynı; gol dakikaları ESPN)

@@ -4,12 +4,12 @@
 
 Sorgu: `NOT (title ~ '[0-9] - [0-9]') AND title LIKE '% - %' AND start_date + interval '3 hours' < now()`, alt sınır yok. **4 satır**:
 
-| Başlangıç (İstanbul) | Maç | Kategori |
-| --- | --- | --- |
-| 2026-10-24 14:30 | Aston Villa - Manchester City | premier-lig |
-| 2026-10-24 17:00 | Arsenal - Everton | premier-lig |
-| 2026-10-24 19:00 | Napoli - Roma | serie-a |
-| 2026-10-24 19:30 | Chelsea - Tottenham | premier-lig |
+| Başlangıç (İstanbul) | Maç                           | Kategori    |
+| -------------------- | ----------------------------- | ----------- |
+| 2026-10-24 14:30     | Aston Villa - Manchester City | premier-lig |
+| 2026-10-24 17:00     | Arsenal - Everton             | premier-lig |
+| 2026-10-24 19:00     | Napoli - Roma                 | serie-a     |
+| 2026-10-24 19:30     | Chelsea - Tottenham           | premier-lig |
 
 ## Kaynak erişimi
 

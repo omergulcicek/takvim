@@ -206,3 +206,37 @@
 - Hazırlık kuralı: **sadece Türkiye** dostluk maçları
 - Kaldırıldı: Avustralya – Brezilya (25 ve 29 Eyl)
 - Migration: `supabase/migrations/20260917113800_remove_brazil_australia_friendlies.sql`
+
+---
+
+## Run 23:58 TR — Beşiktaş–Marsilya FT
+
+- Invoked: 2026-09-17 23:58 (`Europe/Istanbul`)
+- Window: 2026-09-17 → 2026-10-01 (+14d)
+
+### Sources
+
+- https://site.web.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915591 — **STATUS_FULL_TIME** / `completed: true` / **4-1**
+- https://www.espn.com/soccer/match/_/gameId/401915591 — Fakili 15', Cerný 56', Murillo 59', Poku 81' / Abdallah 29'
+- https://www.espn.com/soccer/scoreboard/_/date/20260917/league/uefa.europa — skorboard teyit
+
+### Events checked
+
+| Event                           | Status       | Action        |
+| ------------------------------- | ------------ | ------------- |
+| Beşiktaş - Marsilya             | finished 4-1 | update result |
+| 18–20 Eyl kulüp / 24 Eyl+ millî | scheduled    | none          |
+
+### Migrations
+
+- `supabase/migrations/20260917235800_update_besiktas_marsilya_result.sql`
+
+### Skipped
+
+- Yeni fikstür yok (pencere dolu)
+- Diğer bugünkü maç yok
+
+### Notes
+
+- **1** FT skor (UEL 1. hafta)
+- Pre-match description gol listesiyle değiştirildi
