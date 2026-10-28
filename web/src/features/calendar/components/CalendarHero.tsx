@@ -2,6 +2,7 @@ import type { MouseEvent } from "react";
 
 import { Check } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   navTargetHref,
@@ -28,7 +29,7 @@ function HeroAction({
   }
 
   return (
-    <Button asChild variant={variant}>
+    <Button asChild size="sm" variant={variant}>
       <a href={navTargetHref(target)} onClick={handleClick}>
         {children}
       </a>
@@ -47,11 +48,13 @@ export function CalendarHero() {
         {SITE_DESCRIPTION}
       </p>
 
-      <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground sm:text-sm">
+      <ul className="flex flex-wrap items-center justify-center gap-2">
         {SITE_HIGHLIGHTS.map((highlight) => (
-          <li key={highlight} className="flex items-center gap-1.5">
-            <Check className="size-3.5 shrink-0 text-brand" strokeWidth={2.5} aria-hidden />
-            {highlight}
+          <li key={highlight}>
+            <Badge>
+              <Check className="text-brand" strokeWidth={2.5} aria-hidden />
+              {highlight}
+            </Badge>
           </li>
         ))}
       </ul>

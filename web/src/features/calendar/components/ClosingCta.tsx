@@ -32,7 +32,7 @@ export function ClosingCta() {
           Kategorileri seçin, kullandığınız uygulamaya tek tıkla ekleyin. Ücretsiz, kayıt gerekmez.
         </p>
 
-        <Button asChild size="lg">
+        <Button asChild>
           <a href={navTargetHref(SITE_SECTIONS.abonelik)} onClick={handleClick}>
             Kategorileri seç ve abone ol
           </a>
