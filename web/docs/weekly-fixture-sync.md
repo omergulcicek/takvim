@@ -41,6 +41,7 @@ Pencerede (`BUGUN` → `+14 gün`) kapsam içi takımların oynayacağı maçlar
 - Takım kapsam listesinde değilse maç eklenmez.
 - Geçmiş maçlardan yeni maç eklenmez.
 - Ekleme yoksa logda "pencerede eksik maç yok" yazılır ve kaç maç kontrol edildiği belirtilir.
+- **Millî takımlar yalnızca Türkiye'den ibaret değildir.** Kapsam: İspanya, Fransa, İngiltere, Portekiz, Almanya, Türkiye, Arjantin, Brezilya. Resmî turnuva ve eleme maçları sekizi için de eklenir; **hazırlık maçı yalnızca Türkiye** için eklenir. Logda sekiz takımın kontrol edildiği belirtilir, yalnızca Türkiye yazılmaz.
 
 ### Adım 3 — Saat taraması
 
@@ -55,6 +56,7 @@ start_date > now()
 - Saat iki kaynakta aynıysa güncelle. Değilse `12:00` kalır ve logda "saat netleşmedi" olarak yazılır.
 - Bu adım **her koşuda** çalışır; placeholder sayısı sıfır olsa bile sorgu çalıştırılır ve sonuç loglanır.
 - Maç 72 saatten yakınsa ve saat hâlâ netleşmediyse logda ayrıca **uyarı** satırı açılır.
+- Pencere dışındaki (14 günden uzak) placeholder'lar normaldir; o maçların saati henüz açıklanmamıştır. Bu adımın kapsamı dışındadır, eksik sayılmaz.
 
 ### Adım 4 — Migration ve uygulama
 
@@ -75,7 +77,7 @@ Yazmadan önce aynı değişiklik Takvim'de var mı kontrol et. Dosyayı yaz, co
 | Adım 3 — Saatler  | Placeholder sayısı, netleşen saatler, netleşmeyenler, uyarılar    |
 | Kaynaklar         | Kaynak bazında erişim durumu (erişildi / 403 / 404 / zaman aşımı) |
 | Migration         | Dosya adı ve tek satır Türkçe özet                                |
-| Kalan iş          | Hâlâ skorsuz maçlar, hâlâ placeholder saatler                     |
+| Kalan iş          | Hâlâ skorsuz maçlar, **pencere içinde** hâlâ placeholder saatler  |
 
 ### Adım 6 — Push
 
@@ -94,9 +96,11 @@ Sıra: sonuç siteleri, resmî siteler, haber siteleri.
 | Tür              | Kaynaklar                                                                                                                        |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | Sonuç ve fikstür | flashscore.com, flashscore.com.tr, sofascore.com, livescore.com, fotmob.com, site.api.espn.com, espn.com, footballwebpages.co.uk |
-| Kart ve olay     | site.api.espn.com, fotmob.com, mackolik.com, tff.org (resmî maç raporu)                                                          |
+| Kart ve olay     | site.api.espn.com ve fotmob.com (ikisi de kart verisi taşır, koşu ortamından erişilebiliyor), tff.org (resmî maç raporu)         |
 | Resmî            | premierleague.com, laliga.com, fcbarcelona.com, realmadrid.com, uefa.com, legaseriea.it, tff.org                                 |
 | Haber            | bbc.co.uk, skysports.com, fanatik.com.tr, milliyet.com.tr                                                                        |
+
+Koşu ortamından sürekli 403 dönen kaynaklar: **sofascore.com, mackolik.com, footballwebpages.co.uk**. Bunlar listede kalır ama sıraya en sona konur; ilk tercih `site.api.espn.com` ve `fotmob.com`'dur.
 
 Bir kaynak hata verirse (403, 404, zaman aşımı, boş sayfa, alan adı çözümlenemiyor) o kaynak atlanır ve sıradakine geçilir. Kaynak hatası görevin başarısız olduğu anlamına gelmez. Hiçbir kaynak yanıt vermezse maç atlanır ve logda "kaynak erişilemedi" yazılır.
 
