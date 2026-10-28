@@ -47,7 +47,7 @@ export function CalendarPage() {
           <CalendarHero />
         </div>
 
-        <div className="mx-auto w-full max-w-screen-2xl px-4">
+        <div className="mx-auto w-full max-w-7xl px-4">
           {mounted ? (
             <div className="flex flex-row items-start gap-3 sm:gap-4 lg:gap-8">
               <CalendarCategorySidebar

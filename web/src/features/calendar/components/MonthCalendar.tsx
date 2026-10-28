@@ -31,7 +31,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { CalendarEventSearch } from "@/features/calendar/components/CalendarEventSearch";
-import { SECTION_HEADING_CLASS } from "@/features/calendar/data/site-nav";
 import { getCategoryColor } from "@/features/calendar/helpers/categories";
 
 // Hafta Pazartesi başlar (date-fns: 1 = Pazartesi).
@@ -64,6 +63,10 @@ export type CalendarEvent = {
 };
 
 type CalendarView = "month" | "year" | "list";
+
+// Takvimin kendi başlığı; sayfa bölüm başlıklarından küçüktür çünkü yoğun bir
+// araç çubuğunun içinde yer alır.
+const MONTH_TITLE_CLASS = "text-xl font-semibold tracking-tight";
 
 const MOBILE_VIEW_QUERY = "(max-width: 767px)";
 
@@ -381,7 +384,7 @@ export function MonthCalendar({
       <TooltipProvider delayDuration={200}>
         <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4">
           <div className="flex items-center justify-between gap-2 md:contents">
-            <h2 className={cn(SECTION_HEADING_CLASS, "min-w-0 truncate capitalize tabular-nums")}>
+            <h2 className={cn(MONTH_TITLE_CLASS, "min-w-0 truncate capitalize tabular-nums")}>
               {view === "year"
                 ? format(currentMonth, "yyyy", { locale: tr })
                 : format(currentMonth, "LLLL yyyy", { locale: tr })}
@@ -418,7 +421,7 @@ export function MonthCalendar({
           </div>
         </TooltipProvider>
       ) : view === "list" ? (
-        <div className="-mx-4 flex flex-col divide-y border-y sm:mx-0 sm:overflow-hidden sm:rounded-b-xl sm:border-0 sm:shadow-surface">
+        <div className="-mx-4 flex flex-col divide-y border-y bg-card sm:mx-0 sm:overflow-hidden sm:rounded-b-xl sm:border-0 sm:shadow-surface">
           {listEvents.length === 0 ? (
             <p className="px-4 py-8 text-center text-sm text-muted-foreground">
               Bu ay gösterilecek bir şey yok.
@@ -437,7 +440,7 @@ export function MonthCalendar({
       ) : (
         <>
           <div className="min-w-0 overflow-x-auto">
-            <div className="min-w-[280px] overflow-hidden rounded-b-xl shadow-surface">
+            <div className="min-w-[280px] overflow-hidden rounded-b-xl bg-card shadow-surface">
               <div className="grid grid-cols-7 border-b bg-muted/30 text-center text-[10px] font-medium tracking-wide text-muted-foreground uppercase sm:text-xs">
                 {weekdayLabels.map((label) => (
                   <div key={label} className="py-1.5 sm:py-2">

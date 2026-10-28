@@ -1,7 +1,7 @@
 export const SECTION_SCROLL_CLASS = "scroll-mt-24";
 export const SECTION_SCROLL_OFFSET = 96;
-export const SECTION_HEADING_CLASS = "text-xl font-semibold tracking-tight";
-export const SECTION_DESC_CLASS = "text-sm text-muted-foreground";
+export const SECTION_HEADING_CLASS = "text-2xl font-semibold tracking-tight sm:text-3xl";
+export const SECTION_DESC_CLASS = "text-sm text-muted-foreground sm:text-base";
 export const SECTION_NARROW_CLASS = "mx-auto w-full max-w-4xl";
 
 // "yıl dönümleri" tek kavram; `text-balance` satır sonunda bölmesin diye
