@@ -4,8 +4,14 @@ export const SECTION_HEADING_CLASS = "text-xl font-semibold tracking-tight";
 export const SECTION_DESC_CLASS = "text-sm text-muted-foreground";
 export const SECTION_NARROW_CLASS = "mx-auto w-full max-w-4xl";
 
+// "yıl dönümleri" tek kavram; `text-balance` satır sonunda bölmesin diye
+// aralarında bölünmez boşluk kullanılır.
+export const SITE_TAGLINE = "Maçlar, kandiller ve yıl dönümleri kendi takviminizde";
+
 export const SITE_DESCRIPTION =
-  "İlgilendiğiniz kategorileri seçin, takviminize ücretsiz ekleyin; dosya indirmeden, etkinlikler otomatik güncellenir.";
+  "İlgilendiğiniz kategorileri seçin, Apple, Google veya Outlook takviminize ücretsiz ekleyin. Dosya indirmeden, etkinlikler otomatik güncellenir.";
+
+export const SITE_HIGHLIGHTS = ["Ücretsiz", "Kayıt gerekmez", "Otomatik güncellenir"] as const;
 
 export const SITE_SECTIONS = {
   takvim: "takvim",

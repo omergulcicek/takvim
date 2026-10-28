@@ -65,6 +65,16 @@ export type CalendarEvent = {
 
 type CalendarView = "month" | "year" | "list";
 
+const MOBILE_VIEW_QUERY = "(max-width: 767px)";
+
+// Ay ızgarası dar ekranlarda okunmuyor (başlıklar tek harfe kırpılıyor), bu
+// yüzden mobilde liste görünümüyle açılır. `CalendarPage` bu bileşeni yalnızca
+// mount sonrası render ettiği için `window` okumak hidrasyonu bozmaz.
+function getInitialView(): CalendarView {
+  if (typeof window === "undefined") return "month";
+  return window.matchMedia(MOBILE_VIEW_QUERY).matches ? "list" : "month";
+}
+
 function eventsForDay(events: CalendarEvent[], day: Date): CalendarEvent[] {
   const dayStart = startOfDay(day);
   return events
@@ -219,7 +229,7 @@ export function MonthCalendar({
   toolbarStart?: ReactNode;
 }) {
   const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()));
-  const [view, setView] = useState<CalendarView>("month");
+  const [view, setView] = useState<CalendarView>(getInitialView);
 
   const visibleEvents = useMemo(() => {
     if (selectedCategorySlugs == null) return events;
@@ -388,9 +398,11 @@ export function MonthCalendar({
         </div>
       </TooltipProvider>
 
-      <p className="mb-3 rounded-xl bg-muted/40 px-3 py-2 text-center text-xs text-pretty text-muted-foreground shadow-surface md:hidden">
-        Daha iyi bir deneyim için telefonunuzu yan çevirin.
-      </p>
+      {view === "month" ? (
+        <p className="mb-3 rounded-xl bg-muted/40 px-3 py-2 text-center text-xs text-pretty text-muted-foreground shadow-surface md:hidden">
+          Daha iyi bir deneyim için telefonunuzu yan çevirin.
+        </p>
+      ) : null}
 
       {view === "year" ? (
         <TooltipProvider delayDuration={200}>

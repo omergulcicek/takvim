@@ -1,15 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ComponentType, SVGProps } from "react";
 
-import { Check, ChevronDown, Copy, ExternalLink } from "lucide-react";
+import { Check, ChevronDown, Copy } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
+import {
+  buildAppleSubscribeUrl,
+  buildGoogleSubscribeUrl,
+  buildOutlookSubscribeUrl,
+} from "@/lib/feeds/calendar-app-urls";
+import type { CalendarApp } from "@/lib/feeds/calendar-app-urls";
 import { resolveSubscribeFeedUrl } from "@/lib/feeds/urls";
-import { toWebcalUrl } from "@/lib/site-url";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Apple } from "@/components/ui/svgs/apple";
+import { Google } from "@/components/ui/svgs/google";
+import { MicrosoftOutlook } from "@/components/ui/svgs/microsoftOutlook";
 import type { CategoryRow } from "@/features/calendar/api/categories";
 import {
   SECTION_DESC_CLASS,
@@ -28,6 +37,16 @@ type SubscriptionPanelProps = {
 };
 
 type GroupableCategory = CategoryRow & { key: string };
+
+type SubscribeAppLink = {
+  id: CalendarApp;
+  label: string;
+  href: string;
+  Icon: ComponentType<SVGProps<SVGSVGElement>>;
+  opensInBrowser: boolean;
+};
+
+const DEFAULT_CALENDAR_NAME = "Takvim";
 
 export function SubscriptionPanel({
   categories,
@@ -78,6 +97,37 @@ export function SubscriptionPanel({
     [categories, selectedSlugs],
   );
 
+  const calendarName =
+    (selectedNames.length === 1 ? selectedNames[0] : null) ?? DEFAULT_CALENDAR_NAME;
+
+  const appLinks = useMemo<SubscribeAppLink[]>(() => {
+    if (!feedUrl) return [];
+
+    return [
+      {
+        id: "apple",
+        label: "Apple Takvim",
+        href: buildAppleSubscribeUrl(feedUrl),
+        Icon: Apple,
+        opensInBrowser: false,
+      },
+      {
+        id: "google",
+        label: "Google Takvim",
+        href: buildGoogleSubscribeUrl(feedUrl),
+        Icon: Google,
+        opensInBrowser: true,
+      },
+      {
+        id: "outlook",
+        label: "Outlook",
+        href: buildOutlookSubscribeUrl(feedUrl, calendarName),
+        Icon: MicrosoftOutlook,
+        opensInBrowser: true,
+      },
+    ];
+  }, [feedUrl, calendarName]);
+
   const allSelected = selectedList.length === allSlugs.length && allSlugs.length > 0;
   const noneSelected = selectedList.length === 0;
 
@@ -109,12 +159,6 @@ export function SubscriptionPanel({
     setCopied(true);
     if (copiedResetRef.current) clearTimeout(copiedResetRef.current);
     copiedResetRef.current = setTimeout(() => setCopied(false), 2000);
-  }
-
-  function subscribeWithWebcal() {
-    if (!feedUrl) return;
-    window.location.href = toWebcalUrl(feedUrl);
-    void copyFeedUrl();
   }
 
   function renderCategoryCheckbox(category: GroupableCategory) {
@@ -155,8 +199,8 @@ export function SubscriptionPanel({
       <div className="flex flex-col gap-1.5">
         <h2 className={cn(SECTION_HEADING_CLASS, "text-balance")}>Takvim Aboneliği</h2>
         <p className={cn(SECTION_DESC_CLASS, "text-pretty")}>
-          Kategorileri seçin, abonelik URL’sini kopyalayın ve takvim uygulamanıza ekleyin. Abonelik,
-          dosya indirmekten farklıdır — etkinlikler otomatik güncellenir.
+          Kategorileri seçin, kullandığınız takvim uygulamasına tek tıkla ekleyin. Abonelik, dosya
+          indirmekten farklıdır — etkinlikler otomatik güncellenir.
         </p>
         <p className={cn(SECTION_DESC_CLASS, "text-pretty")}>
           Takvimlerin uygulamanızda ayrı ayrı renklerle görünmesini istiyorsanız her kategoriye tek
@@ -267,41 +311,61 @@ export function SubscriptionPanel({
                 ) : null}
               </AnimatePresence>
             </div>
-            <div className="mt-3 flex flex-col gap-2">
-              <div className="flex flex-wrap gap-2">
-                <Button type="button" size="sm" onClick={subscribeWithWebcal}>
-                  <ExternalLink className="size-4" strokeWidth={2} />
-                  Abone ol
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={() => void copyFeedUrl()}
-                >
-                  <span className="relative size-4">
-                    <AnimatePresence initial={false} mode="wait">
-                      <motion.span
-                        key={copied ? "check" : "copy"}
-                        className="absolute inset-0 flex items-center justify-center"
-                        initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
-                        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                        exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
-                        transition={{ type: "spring", duration: 0.3, bounce: 0 }}
-                      >
-                        {copied ? (
-                          <Check className="size-4" strokeWidth={2} />
-                        ) : (
-                          <Copy className="size-4" strokeWidth={2} />
-                        )}
-                      </motion.span>
-                    </AnimatePresence>
-                  </span>
-                  {copied ? "Kopyalandı ✓" : "URL’yi kopyala"}
-                </Button>
+            <div className="mt-4 flex flex-col gap-2.5">
+              <p className="text-sm font-medium">Takvim uygulamanızda açın</p>
+
+              <div className="grid gap-2 sm:grid-cols-3">
+                {appLinks.map((app) => (
+                  <Button
+                    key={app.id}
+                    asChild
+                    variant="outline"
+                    className="justify-start sm:justify-center"
+                  >
+                    <a
+                      href={app.href}
+                      target={app.opensInBrowser ? "_blank" : undefined}
+                      rel={app.opensInBrowser ? "noreferrer" : undefined}
+                    >
+                      <app.Icon aria-hidden />
+                      {app.label}
+                    </a>
+                  </Button>
+                ))}
               </div>
+
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="self-start"
+                onClick={() => void copyFeedUrl()}
+              >
+                <span className="relative size-4">
+                  <AnimatePresence initial={false} mode="wait">
+                    <motion.span
+                      key={copied ? "check" : "copy"}
+                      className="absolute inset-0 flex items-center justify-center"
+                      initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+                      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+                      transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+                    >
+                      {copied ? (
+                        <Check className="size-4" strokeWidth={2} />
+                      ) : (
+                        <Copy className="size-4" strokeWidth={2} />
+                      )}
+                    </motion.span>
+                  </AnimatePresence>
+                </span>
+                <span aria-live="polite">{copied ? "Kopyalandı ✓" : "URL’yi kopyala"}</span>
+              </Button>
+
               <p className="text-xs text-pretty text-muted-foreground">
-                Abone ol uygulamayı doğrudan açar; URL’yi kopyala manuel yapıştırma içindir.
+                Apple Takvim bağlantısı uygulamayı doğrudan açar. Google ve Outlook tarayıcıda
+                açılır; ekleme işlemini bilgisayarda yapmanız gerekebilir, takvim sonrasında
+                telefonunuza senkronize olur.
               </p>
             </div>
           </>
