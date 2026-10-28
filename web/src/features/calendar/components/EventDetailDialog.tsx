@@ -100,7 +100,7 @@ export function EventDetailDialog({ open, onOpenChange, event }: EventDetailDial
                       href={event.sourceUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="font-medium text-primary underline-offset-4 hover:underline"
+                      className="font-medium text-brand underline-offset-4 hover:underline"
                     >
                       {decodeUrlForDisplay(event.sourceUrl)}
                     </a>

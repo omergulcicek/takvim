@@ -78,26 +78,36 @@ export function CalendarPage() {
         </div>
       </section>
 
-      <div className="space-y-20 px-4 sm:space-y-28 md:space-y-32">
-        <Reveal>
-          <SubscriptionPanel
-            categories={categoryRows}
-            selectedSlugs={selectedCategorySlugs}
-            onSelectedSlugsChange={setSelectedCategorySlugs}
-          />
-        </Reveal>
+      <div className="space-y-20 sm:space-y-28 md:space-y-32">
+        <div className="px-4">
+          <Reveal>
+            <SubscriptionPanel
+              categories={categoryRows}
+              selectedSlugs={selectedCategorySlugs}
+              onSelectedSlugsChange={setSelectedCategorySlugs}
+            />
+          </Reveal>
+        </div>
 
-        <Reveal>
-          <HowToSubscribeSection />
-        </Reveal>
+        {/* Tam genişlikte bant: bölümler arasına ritim koyar, "nasıl eklerim"i
+            abonelik ve SSS'den görsel olarak ayırır. */}
+        <div className="border-y border-border/60 bg-muted/40 px-4 py-20 sm:py-28 md:py-32">
+          <Reveal>
+            <HowToSubscribeSection />
+          </Reveal>
+        </div>
 
-        <Reveal>
-          <FaqSection />
-        </Reveal>
+        <div className="px-4">
+          <Reveal>
+            <FaqSection />
+          </Reveal>
+        </div>
 
-        <Reveal>
-          <ClosingCta />
-        </Reveal>
+        <div className="px-4">
+          <Reveal>
+            <ClosingCta />
+          </Reveal>
+        </div>
       </div>
 
       <EventDetailDialog open={dialogOpen} onOpenChange={setDialogOpen} event={selectedEvent} />

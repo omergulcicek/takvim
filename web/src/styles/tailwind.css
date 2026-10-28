@@ -30,6 +30,13 @@
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
 
+  /* Marka vurgusu. Düğmeler nötr kalır; bu renk yalnızca kroma ait öğelerde
+     kullanılır (logo işareti, bağlantılar, takvimdeki "bugün"). Kategori
+     paleti ton çemberini doldurduğu için Türk Edebiyatı mavisine komşu,
+     ama o renk takvim içinde 6px'lik noktalarda görünüyor. */
+  --brand: oklch(0.48 0.2 264);
+  --brand-foreground: oklch(0.985 0 0);
+
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
 
@@ -65,6 +72,9 @@
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
 
+  --brand: oklch(0.72 0.16 264);
+  --brand-foreground: oklch(0.205 0 0);
+
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
 
@@ -94,6 +104,9 @@
 
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);

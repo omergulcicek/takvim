@@ -63,7 +63,7 @@ const FAQ_ITEMS: FaqItem[] = [
           href={GITHUB_ISSUES_URL}
           target="_blank"
           rel="noreferrer"
-          className="font-medium text-primary underline-offset-4 transition-opacity duration-150 hover:underline"
+          className="font-medium text-brand underline-offset-4 transition-opacity duration-150 hover:underline"
         >
           GitHub üzerinden issue açabilirsiniz
         </a>

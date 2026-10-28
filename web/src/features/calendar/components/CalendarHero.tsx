@@ -19,7 +19,7 @@ function HeroAction({
   children,
 }: {
   target: NavTarget;
-  variant?: "default" | "outline";
+  variant?: "default" | "ghost";
   children: string;
 }) {
   function handleClick(event: MouseEvent<HTMLAnchorElement>) {
@@ -28,7 +28,7 @@ function HeroAction({
   }
 
   return (
-    <Button asChild size="lg" variant={variant}>
+    <Button asChild variant={variant}>
       <a href={navTargetHref(target)} onClick={handleClick}>
         {children}
       </a>
@@ -50,15 +50,15 @@ export function CalendarHero() {
       <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground sm:text-sm">
         {SITE_HIGHLIGHTS.map((highlight) => (
           <li key={highlight} className="flex items-center gap-1.5">
-            <Check className="size-3.5 shrink-0 text-primary" strokeWidth={2.5} aria-hidden />
+            <Check className="size-3.5 shrink-0 text-brand" strokeWidth={2.5} aria-hidden />
             {highlight}
           </li>
         ))}
       </ul>
 
-      <div className="mt-1 flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+      <div className="mt-1 flex flex-wrap items-center justify-center gap-1.5">
         <HeroAction target={SITE_SECTIONS.abonelik}>Kategorileri seç ve abone ol</HeroAction>
-        <HeroAction target={SITE_SECTIONS.nasilEkle} variant="outline">
+        <HeroAction target={SITE_SECTIONS.nasilEkle} variant="ghost">
           Nasıl eklerim?
         </HeroAction>
       </div>

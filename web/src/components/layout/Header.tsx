@@ -8,6 +8,7 @@ import { siteConfig } from "@/config/site.config";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { CalendarMark } from "@/components/ui/svgs/calendarMark";
 import { GithubDark } from "@/components/ui/svgs/githubDark";
 import { GithubLight } from "@/components/ui/svgs/githubLight";
 import { HEADER_NAV, navTargetHref, scrollToNavTarget } from "@/features/calendar/data/site-nav";
@@ -94,8 +95,9 @@ export function Header() {
 
           <NavLink
             target="top"
-            className="text-sm font-semibold tracking-tight text-foreground transition-opacity duration-150 hover:opacity-80"
+            className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground transition-opacity duration-150 hover:opacity-80"
           >
+            <CalendarMark className="size-6 shrink-0" aria-hidden />
             Takvim
           </NavLink>
         </div>

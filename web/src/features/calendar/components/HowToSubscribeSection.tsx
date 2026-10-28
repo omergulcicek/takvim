@@ -182,7 +182,7 @@ export function HowToSubscribeSection() {
               href={guide.helpUrl}
               target="_blank"
               rel="noreferrer"
-              className="font-medium text-primary underline-offset-4 transition-opacity duration-150 hover:underline"
+              className="font-medium text-brand underline-offset-4 transition-opacity duration-150 hover:underline"
             >
               {guide.helpLabel}
             </a>

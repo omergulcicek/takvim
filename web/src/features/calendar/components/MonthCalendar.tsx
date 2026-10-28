@@ -185,7 +185,7 @@ function ListEventRow({
       onClick={() => onClick?.(event)}
       className={cn(
         "flex w-full cursor-pointer flex-col gap-1.5 px-4 py-3 text-left transition-colors duration-100 ease-out-strong sm:flex-row sm:items-start sm:gap-4",
-        isActiveDay ? "bg-primary/10 hover:bg-primary/15" : "hover:bg-accent/70",
+        isActiveDay ? "bg-brand/10 hover:bg-brand/15" : "hover:bg-accent/70",
       )}
     >
       <div className="w-full text-sm text-muted-foreground tabular-nums sm:w-28 sm:shrink-0 sm:pt-0.5">
@@ -473,7 +473,7 @@ export function MonthCalendar({
                         <span
                           className={cn(
                             "flex size-5 items-center justify-center rounded-full text-[10px] tabular-nums sm:size-6 sm:text-xs",
-                            isToday(day) && "bg-primary font-semibold text-primary-foreground",
+                            isToday(day) && "bg-brand font-semibold text-brand-foreground",
                           )}
                         >
                           {format(day, "d")}
