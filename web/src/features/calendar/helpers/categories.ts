@@ -15,7 +15,9 @@ export type CategoryColorKey =
   | "amber500"
   | "rose800"
   | "orange500"
-  | "violet800";
+  | "violet800"
+  | "pink600"
+  | "cyan700";
 
 export type CategoryColorStyle = {
   chip: string;
@@ -102,6 +104,18 @@ export const COLOR_STYLES: Record<CategoryColorKey | "default", CategoryColorSty
     checkbox:
       "border-violet-800 data-[state=checked]:border-violet-800 data-[state=checked]:bg-violet-800 data-[state=checked]:text-white",
   },
+  pink600: {
+    chip: "bg-pink-100 text-pink-950 dark:bg-pink-600/15 dark:text-pink-300",
+    dot: "bg-pink-600",
+    checkbox:
+      "border-pink-600 data-[state=checked]:border-pink-600 data-[state=checked]:bg-pink-600 data-[state=checked]:text-white",
+  },
+  cyan700: {
+    chip: "bg-cyan-100 text-cyan-950 dark:bg-cyan-700/20 dark:text-cyan-300",
+    dot: "bg-cyan-700",
+    checkbox:
+      "border-cyan-700 data-[state=checked]:border-cyan-700 data-[state=checked]:bg-cyan-700 data-[state=checked]:text-white",
+  },
   default: {
     chip: "bg-muted text-foreground/80",
     dot: "bg-muted-foreground",
@@ -118,15 +132,19 @@ export const CATEGORY_COLOR_MAP: Record<string, CategoryColorKey> = {
   "onemli-sahsiyetler": "indigo600",
   "tarihi-olaylar": "stone700",
   "turk-edebiyati": "blue600",
+  // Futbol kategorilerinin her biri ayrı renk alır; hepsi aynı yeşilken
+  // takvimde bir Beşiktaş maçı Premier Lig maçından ayırt edilemiyordu.
+  // Kulüplerde boşta olan ikonik renk kullanıldı (siyah-beyaz, bordo).
+  // `milli-takimlar` yeşili korur: Futbol grubunun toggle rengi ona bağlı.
+  besiktas: "black",
+  fenerbahce: "amber500",
+  galatasaray: "orange500",
+  trabzonspor: "rose800",
   "milli-takimlar": "green400",
-  "sampiyonlar-ligi": "green400",
-  "premier-lig": "green400",
-  "la-liga": "green400",
-  "serie-a": "green400",
-  besiktas: "green400",
-  fenerbahce: "green400",
-  galatasaray: "green400",
-  trabzonspor: "green400",
+  "sampiyonlar-ligi": "violet800",
+  "premier-lig": "purple600",
+  "la-liga": "pink600",
+  "serie-a": "cyan700",
 };
 
 export function getCategoryColor(slug: string | null | undefined): CategoryColorStyle {

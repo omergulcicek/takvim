@@ -8,6 +8,7 @@ import {
   CalendarCategorySidebar,
 } from "@/features/calendar/components/CalendarCategorySidebar";
 import { CalendarHero } from "@/features/calendar/components/CalendarHero";
+import { ClosingCta } from "@/features/calendar/components/ClosingCta";
 import { EventDetailDialog } from "@/features/calendar/components/EventDetailDialog";
 import { FaqSection } from "@/features/calendar/components/FaqSection";
 import { HowToSubscribeSection } from "@/features/calendar/components/HowToSubscribeSection";
@@ -92,6 +93,10 @@ export function CalendarPage() {
 
         <Reveal>
           <FaqSection />
+        </Reveal>
+
+        <Reveal>
+          <ClosingCta />
         </Reveal>
       </div>
 

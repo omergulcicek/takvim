@@ -56,6 +56,7 @@ export function SubscriptionPanel({
   const allSlugs = useMemo(() => categories.map((category) => category.slug), [categories]);
   const [copied, setCopied] = useState(false);
   const [selectedListOpen, setSelectedListOpen] = useState(false);
+  const [manualUrlOpen, setManualUrlOpen] = useState(false);
   const copiedResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -262,16 +263,13 @@ export function SubscriptionPanel({
       </div>
 
       <div className="mt-5 rounded-xl bg-muted/40 p-4 shadow-surface">
-        <p className="text-sm font-medium">Abonelik URL’si</p>
+        <p className="text-sm font-medium">Takvim uygulamanızda açın</p>
         {selectedList.length === 0 ? (
           <p className="mt-2 text-sm text-pretty text-muted-foreground">
             En az bir kategori seçin.
           </p>
         ) : (
           <>
-            <p className="mt-2 rounded-lg bg-background/80 px-3 py-2 font-mono text-xs break-all tabular-nums sm:text-sm">
-              {feedUrl}
-            </p>
             <div className="mt-2">
               <button
                 type="button"
@@ -311,9 +309,7 @@ export function SubscriptionPanel({
                 ) : null}
               </AnimatePresence>
             </div>
-            <div className="mt-4 flex flex-col gap-2.5">
-              <p className="text-sm font-medium">Takvim uygulamanızda açın</p>
-
+            <div className="mt-3 flex flex-col gap-2.5">
               <div className="grid gap-2 sm:grid-cols-3">
                 {appLinks.map((app) => (
                   <Button
@@ -334,39 +330,77 @@ export function SubscriptionPanel({
                 ))}
               </div>
 
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                className="self-start"
-                onClick={() => void copyFeedUrl()}
-              >
-                <span className="relative size-4">
-                  <AnimatePresence initial={false} mode="wait">
-                    <motion.span
-                      key={copied ? "check" : "copy"}
-                      className="absolute inset-0 flex items-center justify-center"
-                      initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
-                      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                      exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
-                      transition={{ type: "spring", duration: 0.3, bounce: 0 }}
-                    >
-                      {copied ? (
-                        <Check className="size-4" strokeWidth={2} />
-                      ) : (
-                        <Copy className="size-4" strokeWidth={2} />
-                      )}
-                    </motion.span>
-                  </AnimatePresence>
-                </span>
-                <span aria-live="polite">{copied ? "Kopyalandı ✓" : "URL’yi kopyala"}</span>
-              </Button>
-
               <p className="text-xs text-pretty text-muted-foreground">
                 Apple Takvim bağlantısı uygulamayı doğrudan açar. Google ve Outlook tarayıcıda
                 açılır; ekleme işlemini bilgisayarda yapmanız gerekebilir, takvim sonrasında
                 telefonunuza senkronize olur.
               </p>
+
+              <div className="mt-0.5 border-t border-border/60 pt-3">
+                <button
+                  type="button"
+                  className={cn(
+                    "inline-flex items-center gap-1 text-xs text-muted-foreground",
+                    "rounded-md transition-colors duration-150 ease-out-strong",
+                    "hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
+                  )}
+                  aria-expanded={manualUrlOpen}
+                  onClick={() => setManualUrlOpen((open) => !open)}
+                >
+                  <span>Bağlantıyı elle ekleyeceğim</span>
+                  <ChevronDown
+                    className={cn(
+                      "size-3.5 transition-transform duration-200 ease-out-strong",
+                      manualUrlOpen && "rotate-180",
+                    )}
+                    strokeWidth={2}
+                    aria-hidden
+                  />
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {manualUrlOpen ? (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2, ease: [0.2, 0, 0, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <p className="mt-2 rounded-lg bg-background/80 px-3 py-2 font-mono text-xs break-all tabular-nums sm:text-sm">
+                        {feedUrl}
+                      </p>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        className="mt-1.5 -ml-3"
+                        onClick={() => void copyFeedUrl()}
+                      >
+                        <span className="relative size-4">
+                          <AnimatePresence initial={false} mode="wait">
+                            <motion.span
+                              key={copied ? "check" : "copy"}
+                              className="absolute inset-0 flex items-center justify-center"
+                              initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+                              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                              exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+                              transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+                            >
+                              {copied ? (
+                                <Check className="size-4" strokeWidth={2} />
+                              ) : (
+                                <Copy className="size-4" strokeWidth={2} />
+                              )}
+                            </motion.span>
+                          </AnimatePresence>
+                        </span>
+                        <span aria-live="polite">{copied ? "Kopyalandı ✓" : "URL’yi kopyala"}</span>
+                      </Button>
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
+              </div>
             </div>
           </>
         )}
