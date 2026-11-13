@@ -115,10 +115,11 @@ Bir kaynak hata verirse (403, 404, zaman aşımı, boş sayfa, alan adı çözü
 ## Doğrulama
 
 - Bitiş (FT) ve skor **en az iki farklı kaynakta** aynı olmalı.
-- Gol dakikaları tek kaynaktan alınabilir. Diğer kaynakla 1 dakikadan fazla çelişiyorsa maç atlanır.
+- Gol dakikaları tek kaynaktan alınabilir. Diğer kaynakla 1 dakikadan fazla çelişiyorsa FotMob değeri yazılır (aşağıya bkz.).
 - **Kırmızı kart:** kartın varlığı ve oyuncu adı en az iki kaynakta aynı olmalı. Kartın varlığı doğrulanıp oyuncu adı doğrulanamazsa kart satırı yazılmaz, ancak logda "kart doğrulanamadı" satırı açılır — sessizce düşürülmez.
 - Kaynaklar çelişiyorsa veya bilgi yoksa maç atlanır. **Bilgi uydurulmaz.**
 - Önceki koşunun yazdığı varsayılarak kontrol atlanmaz.
+- **Kaynak çelişkisinde FotMob önceliklidir.** Skor ve bitiş en az iki kaynakta aynı olmalıdır; olay dakikası (gol, kart) kaynaklar arasında 1 dakikadan fazla farklıysa FotMob'un değeri yazılır ve logda çelişki belirtilir. Maç yalnızca skor/bitiş çelişirse veya FotMob dahil hiçbir kaynakta bilgi yoksa atlanır; amaç skorsuz maç bırakmamaktır.
 
 ## Skor ve olay formatı
 

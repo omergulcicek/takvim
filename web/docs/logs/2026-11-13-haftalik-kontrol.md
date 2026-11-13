@@ -54,3 +54,8 @@ Sorgu çalıştı. 12:00 placeholder sayısı: **0**. Netleşen / netleşmeyen /
 ## Sonuç
 
 KISMİ — üç adım çalıştı; Çekya - İspanya skorsuz kaldı.
+
+## Ek — Çekya - İspanya (kullanıcı talimatı)
+
+Kaynak çelişkisinde FotMob önceliklidir kararı runbook'a eklendi. Krejcí kırmızı kartı FotMob'a göre 69' olarak yazıldı.
+- Migration dosyası: `20261113080000_update_cekya_ispanya_sonuc.sql` — **henüz `apply_migration` ile uygulanmadı**: Supabase MCP bağlantısı koptu (CONNECT_TIMEOUT). Bir sonraki koşuda veya bağlantı gelince uygulanmalı; migration idempotent.
