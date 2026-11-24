@@ -9,7 +9,7 @@ SQL ve kategori kuralları: [`event-data-rules.md`](./event-data-rules.md).
 | Ad      | Değer                                                            |
 | ------- | ---------------------------------------------------------------- |
 | `BUGUN` | Koşunun çalıştığı günün Europe/Istanbul tarihi (`YYYY-MM-DD`)    |
-| Proje   | Takvim — `ieqzwanwsikryweutnvk`                                  |
+| Proje   | apps — `ieqzwanwsikryweutnvk`, tablolar `takvim` şemasında       |
 | Pencere | `BUGUN` → `BUGUN + 14 gün`                                       |
 | Kapsam  | Kategorilerde tanımlı takımlar. Lig Kupası ve Türkiye Kupası yok |
 

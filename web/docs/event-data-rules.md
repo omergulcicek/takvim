@@ -3,7 +3,8 @@
 Canonical rule set for inserting and updating Supabase calendar events in this repo. Derived from existing migration patterns and `docs/MEMORIES.md`.
 
 > **Apply path:** write `web/supabase/migrations/YYYYMMDDHHMMSS_<verb>_<slug>.sql` → apply remotely with `apply_migration`.  
-> Never use legacy `events.category_id`. Always use the `event_categories` junction table.
+> Never use legacy `events.category_id`. Always use the `event_categories` junction table.  
+> All Takvim tables live in the `takvim` schema (the Supabase project is shared with other apps). Always schema-qualify table names, e.g. `takvim.events`.
 
 When this file is referenced for match results or kickoff changes, also follow templates below exactly. For the weekly sync workflow, see [`docs/weekly-fixture-sync.md`](./weekly-fixture-sync.md).
 
@@ -83,7 +84,7 @@ Do **not** put the score in the title before kickoff.
 -- Short note: which match / competition
 
 WITH inserted AS (
-  INSERT INTO public.events (
+  INSERT INTO takvim.events (
     title, description, start_date, end_date, is_all_day, status, recurrence
   )
   SELECT
@@ -97,16 +98,16 @@ WITH inserted AS (
     'published',
     'none'
   WHERE NOT EXISTS (
-    SELECT 1 FROM public.events e
+    SELECT 1 FROM takvim.events e
     WHERE e.title = 'Home - Away'
       AND e.start_date = ('2026-08-14 21:30:00'::timestamp AT TIME ZONE 'Europe/Istanbul')
   )
   RETURNING id
 )
-INSERT INTO public.event_categories (event_id, category_id)
+INSERT INTO takvim.event_categories (event_id, category_id)
 SELECT inserted.id, c.id
 FROM inserted
-CROSS JOIN public.categories c
+CROSS JOIN takvim.categories c
 WHERE c.slug IN ('club-slug') -- UCL: IN ('club-slug', 'sampiyonlar-ligi')
 ON CONFLICT DO NOTHING;
 ```
@@ -171,7 +172,7 @@ Player Name 37'', 45+1'', 87'' (Penaltı)   -- same player, multiple goals
 ```sql
 -- Home X - Y Away (Competition)
 
-UPDATE public.events
+UPDATE takvim.events
 SET
   title = 'Home 1 - 0 Away',
   description = NULLIF(E'Scorer 26''
